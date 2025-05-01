@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import type { DayPrices, Promotion, TimeSlot, LateNightLanes } from "@/lib/types"
 import { formatTimeRange } from "@/lib/db"
 import { Clock } from "lucide-react"
+import SpecialPromotionCard from "./special-promotion-card"
 
 // Add this helper component at the top of the file, after imports but before the main component:
 
@@ -182,7 +183,7 @@ export default function PriceBoard({
         lateNightLanes.isActive &&
         lateNightLanes.applicableDays.includes(currentDay) &&
         currentTimeHHMM >= lateNightLanes.startTime &&
-        currentTimeHHMM < lateNightLanes.endTime
+        (lateNightLanes.endTime === "CLOSE" || currentTimeHHMM < lateNightLanes.endTime)
       ) {
         setIsLateNight(true)
       } else {
@@ -291,23 +292,24 @@ export default function PriceBoard({
     waitTimeBg: isDarkMode ? "bg-[#1e293b]" : "bg-[#f8f9fa]",
     waitTimeText: isDarkMode ? "text-white" : "text-[#2d455a]",
     waitTimeAccent: isDarkMode ? "text-[#e67e22]" : "text-[#ff8210]",
-    // Late Night Lanes specific colors
-    lateNightBg: "bg-[#0f0f1a]",
-    lateNightText: "text-white",
-    lateNightAccent: "text-[#a78bfa]", // Purple color from the image
   }
 
+  // Check if it's Friday to show the special promotion
+  const isFriday = currentDay === "Friday"
+
   // If Late Night Lanes is active, show the Late Night Lanes UI
-  if (isLateNight && lateNightLanes) {
+  if (isLateNight && lateNightLanes && lateNightLanes.isActive) {
+    // Late Night Lanes UI code (unchanged)
+    // ...
     return (
-      <div className={`w-full h-full ${colorScheme.lateNightBg} ${colorScheme.lateNightText} p-6 flex flex-col`}>
+      <div className={`w-full h-full bg-[#0f0f1a] text-white p-6 flex flex-col`}>
         {/* Header with time */}
         <div className="flex justify-end mb-8">
           <div
             className={`
             ${fullscreen ? "text-3xl" : "text-2xl"} 
             font-medium 
-            ${colorScheme.lateNightAccent}
+            text-[#a78bfa]
             bg-[#1e293b]
             border border-[#a78bfa]
             px-5 py-2 rounded-md shadow-lg
@@ -323,9 +325,7 @@ export default function PriceBoard({
           <div className="mb-12">
             <h1 className={`${fullscreen ? "text-7xl" : "text-6xl"} font-bold mb-4 text-center`}>LATE NIGHT LANES</h1>
 
-            <div
-              className={`${colorScheme.lateNightAccent} ${fullscreen ? "text-4xl" : "text-3xl"} font-medium mb-6 text-center`}
-            >
+            <div className={`text-[#a78bfa] ${fullscreen ? "text-4xl" : "text-3xl"} font-medium mb-6 text-center`}>
               {lateNightLanes.description}
             </div>
 
@@ -343,7 +343,7 @@ export default function PriceBoard({
 
               <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold mb-8`}>{lateNightLanes.subtitle}</div>
 
-              <div className={`${colorScheme.lateNightAccent} ${fullscreen ? "text-xl" : "text-lg"} mb-8`}>
+              <div className={`text-[#a78bfa] ${fullscreen ? "text-xl" : "text-lg"} mb-8`}>
                 {lateNightLanes.disclaimer}
               </div>
             </div>
@@ -357,16 +357,14 @@ export default function PriceBoard({
                 <h3 className={`${fullscreen ? "text-3xl" : "text-2xl"} font-bold mb-4`}>INTERACTIVE DARTS</h3>
                 {currentDartsSlot ? (
                   <>
-                    <div className={`${colorScheme.lateNightAccent} ${fullscreen ? "text-xl" : "text-lg"} mb-4`}>
+                    <div className={`text-[#a78bfa] ${fullscreen ? "text-xl" : "text-lg"} mb-4`}>
                       <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
                     </div>
                     <div className={`${fullscreen ? "text-5xl" : "text-4xl"} font-bold mb-2`}>${currentDartsPrice}</div>
                     <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-gray-300`}>PER LANE, PER HOUR</div>
                   </>
                 ) : (
-                  <div className={`${fullscreen ? "text-2xl" : "text-xl"} ${colorScheme.lateNightAccent}`}>
-                    UNAVAILABLE
-                  </div>
+                  <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-[#a78bfa]`}>UNAVAILABLE</div>
                 )}
               </div>
 
@@ -375,7 +373,7 @@ export default function PriceBoard({
                 <h3 className={`${fullscreen ? "text-3xl" : "text-2xl"} font-bold mb-4`}>LASER TAG</h3>
                 {currentLaserTagSlot ? (
                   <>
-                    <div className={`${colorScheme.lateNightAccent} ${fullscreen ? "text-xl" : "text-lg"} mb-4`}>
+                    <div className={`text-[#a78bfa] ${fullscreen ? "text-xl" : "text-lg"} mb-4`}>
                       <TimeRangeDisplay
                         startTime={currentLaserTagSlot.startTime}
                         endTime={currentLaserTagSlot.endTime}
@@ -387,14 +385,12 @@ export default function PriceBoard({
                     <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-gray-300`}>
                       PER PERSON, PER SESSION
                     </div>
-                    <div className={`${colorScheme.lateNightAccent} ${fullscreen ? "text-lg" : "text-base"} mt-2`}>
+                    <div className={`text-[#a78bfa] ${fullscreen ? "text-lg" : "text-base"} mt-2`}>
                       44" HEIGHT REQUIREMENT
                     </div>
                   </>
                 ) : (
-                  <div className={`${fullscreen ? "text-2xl" : "text-xl"} ${colorScheme.lateNightAccent}`}>
-                    UNAVAILABLE
-                  </div>
+                  <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-[#a78bfa]`}>UNAVAILABLE</div>
                 )}
               </div>
             </div>
@@ -404,8 +400,8 @@ export default function PriceBoard({
         {/* Footer */}
         <div className="mt-8 text-center">
           <div className={`${fullscreen ? "text-3xl" : "text-2xl"} font-bold mb-4`}>
-            <span className={colorScheme.lateNightAccent}>$4.50</span> BOWLING SHOES{" "}
-            <span className={colorScheme.lateNightAccent}>FOR ALL BOWLERS</span>
+            <span className="text-[#a78bfa]">$4.50</span> BOWLING SHOES{" "}
+            <span className="text-[#a78bfa]">FOR ALL BOWLERS</span>
           </div>
         </div>
       </div>
@@ -450,7 +446,17 @@ export default function PriceBoard({
       </div>
 
       {/* Price cards */}
-      <div className={fullscreen ? "flex-1 grid grid-cols-3 gap-12 my-6" : "flex-1 grid grid-cols-3 gap-8"}>
+      <div
+        className={
+          isFriday
+            ? fullscreen
+              ? "flex-1 grid grid-cols-4 gap-8 my-6"
+              : "flex-1 grid grid-cols-4 gap-6"
+            : fullscreen
+              ? "flex-1 grid grid-cols-3 gap-12 my-6"
+              : "flex-1 grid grid-cols-3 gap-8"
+        }
+      >
         {/* Bowling */}
         <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
           <div
@@ -661,8 +667,6 @@ export default function PriceBoard({
                   className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
-                    font-
-                    ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
                     font-medium text-center
                   `}
                 >
@@ -837,6 +841,20 @@ export default function PriceBoard({
             )}
           </div>
         </div>
+
+        {/* Special Friday Promotion Card */}
+        {isFriday && (
+          <SpecialPromotionCard
+            title="FRIDAY SPECIAL"
+            price={19.99}
+            description="PER PERSON"
+            items={["1 Hour of Bowling", "Shoe Rental", "$5 Arcade Card", "Soft Drink or Domestic Draft"]}
+            startTime="16:00"
+            endTime="22:00"
+            darkMode={isDarkMode}
+            fullscreen={fullscreen}
+          />
+        )}
       </div>
 
       {/* Footer */}
