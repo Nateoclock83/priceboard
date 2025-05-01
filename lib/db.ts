@@ -283,29 +283,12 @@ async function tableExists(tableName: string): Promise<boolean> {
   if (!supabase) return false
 
   try {
-    // Check if the table exists in the information schema
-    const { data, error } = await supabase
-      .from("information_schema.tables")
-      .select("table_name")
-      .eq("table_schema", "public")
-      .eq("table_name", tableName)
-      .limit(1)
+    // Try to select a single row from the table
+    // If the table doesn't exist, this will throw an error
+    const { error } = await supabase.from(tableName).select("*").limit(1)
 
-    if (error) {
-      console.error(`Error checking if table ${tableName} exists in information schema:`, error)
-
-      // Fallback: Try to select a single row with a limit of 1
-      try {
-        const { error: selectError } = await supabase.from(tableName).select("*").limit(1)
-        // If there's no error, the table exists
-        return !selectError
-      } catch (fallbackError) {
-        console.error(`Fallback check for table ${tableName} failed:`, fallbackError)
-        return false
-      }
-    }
-
-    return data && data.length > 0
+    // If there's no error, the table exists
+    return !error
   } catch (error) {
     console.error(`Error checking if table ${tableName} exists:`, error)
     return false

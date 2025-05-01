@@ -1,112 +1,89 @@
 "use client"
 
-import { formatTimeRange } from "@/lib/db"
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 
 interface SpecialPromotionCardProps {
   title: string
   price: number
-  description: string
-  items: string[]
-  startTime: string
-  endTime: string
-  darkMode?: boolean
-  fullscreen?: boolean
+  description?: string
+  terms?: string
+  isFullscreen?: boolean
 }
 
 export default function SpecialPromotionCard({
   title,
   price,
-  description,
-  items,
-  startTime,
-  endTime,
-  darkMode = false,
-  fullscreen = false,
+  description = "Friday Special Bundle",
+  terms = "Available from 5PM to 10PM on Fridays",
+  isFullscreen = false,
 }: SpecialPromotionCardProps) {
-  const [formattedTimeRange, setFormattedTimeRange] = useState<string>("")
+  const [isActive, setIsActive] = useState(false)
 
   useEffect(() => {
-    const formatRange = async () => {
-      const range = await formatTimeRange(startTime, endTime)
-      setFormattedTimeRange(range)
+    // Check if it's currently between 5PM and 10PM
+    const checkTimeRange = () => {
+      const now = new Date()
+      const currentHour = now.getHours()
+      // Active between 5PM (17) and 10PM (22)
+      setIsActive(currentHour >= 17 && currentHour < 22)
     }
 
-    formatRange()
-  }, [startTime, endTime])
+    // Check immediately
+    checkTimeRange()
 
-  // Define color schemes for light and dark modes
-  const colorScheme = {
-    cardHeaderBg: darkMode ? "bg-[#1e293b]" : "bg-[#2d455a]",
-    cardHeaderText: "text-white",
-    cardSubheaderBg: darkMode ? "bg-[#9333ea]" : "bg-[#9333ea]", // Purple for special promotion
-    cardSubheaderText: "text-white",
-    cardBackground: darkMode ? "bg-[#1e293b]" : "bg-white",
-    priceText: darkMode ? "text-white" : "text-[#2d455a]",
-    accentText: darkMode ? "text-[#d8b4fe]" : "text-[#9333ea]", // Purple accent
-    itemText: darkMode ? "text-gray-300" : "text-gray-700",
-    shadow: darkMode ? "shadow-lg shadow-black/20" : "shadow-lg",
-  }
+    // Check every minute
+    const interval = setInterval(checkTimeRange, 60000)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Split terms into bullet points if it contains commas
+  const termsList = terms.split(",").map((term) => term.trim())
 
   return (
-    <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
-      <div
-        className={`
-          ${colorScheme.cardHeaderBg} 
-          ${colorScheme.cardHeaderText} 
-          text-center 
-          ${fullscreen ? "py-6 text-3xl h-[90px]" : "py-5 text-2xl h-[72px]"} 
-          font-bold 
-          flex items-center justify-center
-        `}
-      >
-        {formattedTimeRange}
-      </div>
-      <div
-        className={`
-          ${colorScheme.cardSubheaderBg} 
-          ${colorScheme.cardSubheaderText} 
-          text-center 
-          ${fullscreen ? "py-6 text-4xl h-[100px]" : "py-5 text-3xl h-[84px]"} 
-          font-bold 
-          flex items-center justify-center
-        `}
+    <Card
+      className={`${
+        isFullscreen ? "w-full h-full" : "w-full"
+      } overflow-hidden border-0 shadow-lg relative ${isActive ? "bg-green-50" : ""}`}
+    >
+      <CardHeader
+        className={`${
+          isFullscreen ? "py-6" : "py-4"
+        } bg-orange-500 text-white text-center font-bold ${isFullscreen ? "text-4xl" : "text-2xl"}`}
       >
         {title}
-      </div>
-      <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
+      </CardHeader>
+      <CardContent className={`${isFullscreen ? "p-8" : "p-6"} flex flex-col items-center justify-center bg-white`}>
         <div
-          className={`
-            ${colorScheme.priceText} 
-            ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
-            font-bold 
-            flex items-start
-          `}
+          className={`${isFullscreen ? "text-[140px] mb-4" : "text-7xl mb-2"} font-bold text-gray-800 flex items-start`}
         >
-          <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
+          <span className={`${isFullscreen ? "text-6xl mt-8" : "text-4xl mt-2"}`}>$</span>
           {price.toFixed(2)}
         </div>
-        <div
-          className={`
-            ${colorScheme.accentText} 
-            ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
-            font-medium text-center
-          `}
-        >
+        <div className={`${isFullscreen ? "text-3xl mb-6" : "text-xl mb-3"} text-orange-500 font-medium text-center`}>
           {description}
         </div>
-
-        <div className="w-full mt-6">
-          <ul className={`space-y-2 ${fullscreen ? "text-xl" : "text-base"}`}>
-            {items.map((item, index) => (
-              <li key={index} className={`flex items-center ${colorScheme.itemText}`}>
-                <span className={`mr-2 ${colorScheme.accentText}`}>•</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
+        <ul className={`${isFullscreen ? "space-y-2 text-xl" : "space-y-1 text-sm"} w-full`}>
+          {termsList.map((term, index) => (
+            <li key={index} className="flex items-start">
+              <span className="text-orange-500 mr-2">•</span>
+              <span>{term}</span>
+            </li>
+          ))}
+        </ul>
+        {isActive && (
+          <div className={`${isFullscreen ? "text-2xl mt-6" : "text-lg mt-4"} font-semibold text-green-600`}>
+            Available Now!
+          </div>
+        )}
+      </CardContent>
+      <CardFooter
+        className={`${
+          isFullscreen ? "py-4 px-8" : "py-2 px-4"
+        } bg-gray-100 text-center text-gray-600 ${isFullscreen ? "text-lg" : "text-xs"}`}
+      >
+        Limited time offer. Cannot be combined with other promotions.
+      </CardFooter>
+    </Card>
   )
 }

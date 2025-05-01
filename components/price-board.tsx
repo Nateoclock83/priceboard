@@ -230,6 +230,11 @@ export default function PriceBoard({
 
   // Check if an activity has a promotion
   const hasPromotion = (activity: string) => {
+    // If it's Friday and the activity is bowling, don't show the promotion banner
+    // in the regular bowling card since we're showing it as a separate card
+    if (isFriday && activity === "bowling") {
+      return false
+    }
     return activePromotions.some((promo) => promo.applicableActivities.includes(activity))
   }
 
@@ -457,10 +462,13 @@ export default function PriceBoard({
               : "flex-1 grid grid-cols-3 gap-8"
         }
       >
-        {/* Bowling */}
-        <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
-          <div
-            className={`
+        {/* Reorder the cards to ensure bowling cards are together */}
+        {isFriday && (
+          <>
+            {/* Regular Bowling Card */}
+            <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
+              <div
+                className={`
               ${colorScheme.cardHeaderBg} 
               ${colorScheme.cardHeaderText} 
               text-center 
@@ -468,15 +476,15 @@ export default function PriceBoard({
               font-bold 
               flex items-center justify-center
             `}
-          >
-            {currentBowlingSlot ? (
-              <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
-          </div>
-          <div
-            className={`
+              >
+                {currentBowlingSlot ? (
+                  <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
+                ) : (
+                  "TODAY"
+                )}
+              </div>
+              <div
+                className={`
               ${colorScheme.cardSubheaderBg} 
               ${colorScheme.cardSubheaderText} 
               text-center 
@@ -484,145 +492,162 @@ export default function PriceBoard({
               font-bold 
               flex items-center justify-center
             `}
-          >
-            BOWLING
-          </div>
-          <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
-            {currentBowlingSlot ? (
-              <>
-                <div
-                  className={`
+              >
+                BOWLING
+              </div>
+              <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
+                {currentBowlingSlot ? (
+                  <>
+                    <div
+                      className={`
                     ${colorScheme.priceText} 
                     ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
                     font-bold 
                     flex items-start
                   `}
-                >
-                  <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
-                  {currentBowlingPrice}
-                </div>
-                <div
-                  className={`
+                    >
+                      <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
+                      {currentBowlingPrice}
+                    </div>
+                    <div
+                      className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
                     font-medium text-center
                   `}
-                >
-                  PER LANE, PER HOUR
-                </div>
+                    >
+                      PER LANE, PER HOUR
+                    </div>
 
-                {/* Promotion banner at the bottom */}
-                {hasPromotion("bowling") && (
-                  <div className="w-full mt-6">
-                    <div
-                      className={`
+                    {/* Promotion banner at the bottom */}
+                    {hasPromotion("bowling") && (
+                      <div className="w-full mt-6">
+                        <div
+                          className={`
                         ${colorScheme.cardSubheaderBg} 
                         text-white 
                         ${fullscreen ? "py-3 px-5" : "py-2 px-4"} 
                         text-center rounded-md shadow-md
                       `}
-                    >
-                      <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
-                      {getPromotionsForActivity("bowling").map((promo) => (
-                        <div key={promo.id}>
-                          <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
-                            {promo.description}
-                          </div>
-                          {promo.terms && (
-                            <div
-                              className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
-                            >
-                              {promo.terms}
+                        >
+                          <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
+                          {getPromotionsForActivity("bowling").map((promo) => (
+                            <div key={promo.id}>
+                              <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
+                                {promo.description}
+                              </div>
+                              {promo.terms && (
+                                <div
+                                  className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
+                                >
+                                  {promo.terms}
+                                </div>
+                              )}
                             </div>
-                          )}
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : currentPrices?.bowling.showWaitTime ? (
-              // Show wait time when bowling is unavailable but wait time is enabled
-              <div
-                className={`
+                      </div>
+                    )}
+                  </>
+                ) : currentPrices?.bowling.showWaitTime ? (
+                  // Show wait time when bowling is unavailable but wait time is enabled
+                  <div
+                    className={`
                   ${colorScheme.waitTimeBg}
                   p-6 rounded-lg text-center w-full
                 `}
-              >
-                <div className="flex items-center justify-center mb-4">
-                  <Clock className={`${fullscreen ? "h-12 w-12" : "h-8 w-8"} ${colorScheme.waitTimeAccent} mr-3`} />
-                  <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.waitTimeText}`}>
-                    WAIT TIME
-                  </div>
-                </div>
+                  >
+                    <div className="flex items-center justify-center mb-4">
+                      <Clock className={`${fullscreen ? "h-12 w-12" : "h-8 w-8"} ${colorScheme.waitTimeAccent} mr-3`} />
+                      <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.waitTimeText}`}>
+                        WAIT TIME
+                      </div>
+                    </div>
 
-                {/* Stacked wait time display */}
-                <div className="flex flex-col items-center">
-                  {/* Get hours and minutes */}
-                  {(() => {
-                    const { hours, minutes } = getHoursAndMinutes(currentPrices?.bowling.waitTime || 30)
-                    return (
-                      <>
-                        {hours > 0 && (
-                          <div
-                            className={`${fullscreen ? "text-7xl" : "text-6xl"} font-bold ${colorScheme.waitTimeAccent}`}
-                          >
-                            {hours} <span className={`${fullscreen ? "text-4xl" : "text-3xl"}`}>HR</span>
-                          </div>
-                        )}
-                        <div
-                          className={`
+                    {/* Stacked wait time display */}
+                    <div className="flex flex-col items-center">
+                      {/* Get hours and minutes */}
+                      {(() => {
+                        const { hours, minutes } = getHoursAndMinutes(currentPrices?.bowling.waitTime || 30)
+                        return (
+                          <>
+                            {hours > 0 && (
+                              <div
+                                className={`${fullscreen ? "text-7xl" : "text-6xl"} font-bold ${colorScheme.waitTimeAccent}`}
+                              >
+                                {hours} <span className={`${fullscreen ? "text-4xl" : "text-3xl"}`}>HR</span>
+                              </div>
+                            )}
+                            <div
+                              className={`
                             ${fullscreen ? "text-7xl" : "text-6xl"} 
                             font-bold 
                             ${colorScheme.waitTimeAccent}
                             ${hours > 0 ? "mt-2" : ""}
                           `}
-                        >
-                          {minutes} <span className={`${fullscreen ? "text-4xl" : "text-3xl"}`}>MIN</span>
-                        </div>
-                      </>
-                    )
-                  })()}
-                </div>
+                            >
+                              {minutes} <span className={`${fullscreen ? "text-4xl" : "text-3xl"}`}>MIN</span>
+                            </div>
+                          </>
+                        )
+                      })()}
+                    </div>
 
-                {/* Use the current time slot's price for wait time display */}
-                <div className={`${fullscreen ? "text-2xl" : "text-xl"} ${colorScheme.waitTimeText} mt-6`}>
-                  CURRENT PRICE:{" "}
-                  <span className={colorScheme.waitTimeAccent}>
-                    ${currentBowlingSlot ? currentBowlingSlot.price : currentPrices?.bowling.timeSlots[0]?.price || 0}
-                  </span>
-                </div>
-                <div className={`${fullscreen ? "text-xl" : "text-lg"} ${colorScheme.waitTimeText} mt-2 opacity-80`}>
-                  PER LANE, PER HOUR
-                </div>
-              </div>
-            ) : (
-              <div
-                className={`
+                    {/* Use the current time slot's price for wait time display */}
+                    <div className={`${fullscreen ? "text-2xl" : "text-xl"} ${colorScheme.waitTimeText} mt-6`}>
+                      CURRENT PRICE:{" "}
+                      <span className={colorScheme.waitTimeAccent}>
+                        $
+                        {currentBowlingSlot
+                          ? currentBowlingSlot.price
+                          : currentPrices?.bowling.timeSlots[0]?.price || 0}
+                      </span>
+                    </div>
+                    <div
+                      className={`${fullscreen ? "text-xl" : "text-lg"} ${colorScheme.waitTimeText} mt-2 opacity-80`}
+                    >
+                      PER LANE, PER HOUR
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={`
                   ${colorScheme.priceText} 
                   ${fullscreen ? "text-5xl" : "text-3xl"} 
                   font-bold text-center
                 `}
-              >
-                UNAVAILABLE
-                <div
-                  className={`
+                  >
+                    UNAVAILABLE
+                    <div
+                      className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-2xl mt-4" : "text-xl mt-3"} 
                     font-medium text-center
                   `}
-                >
-                  Please check back later
-                </div>
+                    >
+                      Please check back later
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Interactive Darts */}
-        <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
-          <div
-            className={`
+            {/* Special Friday Promotion Card */}
+            <SpecialPromotionCard
+              title="FRIDAY SPECIAL"
+              price={19.99}
+              description="PER PERSON"
+              items={["1 Hour of Bowling", "Shoe Rental", "$5 Arcade Card", "Soft Drink or Domestic Draft"]}
+              startTime="16:00"
+              endTime="22:00"
+              darkMode={isDarkMode}
+              fullscreen={fullscreen}
+            />
+
+            {/* Interactive Darts */}
+            <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
+              <div
+                className={`
               ${colorScheme.cardHeaderBg} 
               ${colorScheme.cardHeaderText} 
               text-center 
@@ -630,15 +655,15 @@ export default function PriceBoard({
               font-bold 
               flex items-center justify-center
             `}
-          >
-            {currentDartsSlot ? (
-              <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
-          </div>
-          <div
-            className={`
+              >
+                {currentDartsSlot ? (
+                  <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
+                ) : (
+                  "TODAY"
+                )}
+              </div>
+              <div
+                className={`
               ${colorScheme.cardSubheaderBg} 
               ${colorScheme.cardSubheaderText} 
               text-center 
@@ -646,90 +671,90 @@ export default function PriceBoard({
               font-bold 
               flex items-center justify-center
             `}
-          >
-            INTERACTIVE DARTS
-          </div>
-          <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
-            {currentDartsSlot ? (
-              <>
-                <div
-                  className={`
+              >
+                INTERACTIVE DARTS
+              </div>
+              <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
+                {currentDartsSlot ? (
+                  <>
+                    <div
+                      className={`
                     ${colorScheme.priceText} 
                     ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
                     font-bold 
                     flex items-start
                   `}
-                >
-                  <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
-                  {currentDartsPrice}
-                </div>
-                <div
-                  className={`
+                    >
+                      <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
+                      {currentDartsPrice}
+                    </div>
+                    <div
+                      className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
                     font-medium text-center
                   `}
-                >
-                  PER LANE, PER HOUR
-                </div>
+                    >
+                      PER LANE, PER HOUR
+                    </div>
 
-                {/* Promotion banner at the bottom */}
-                {hasPromotion("darts") && (
-                  <div className="w-full mt-6">
-                    <div
-                      className={`
+                    {/* Promotion banner at the bottom */}
+                    {hasPromotion("darts") && (
+                      <div className="w-full mt-6">
+                        <div
+                          className={`
                         ${colorScheme.cardSubheaderBg} 
                         text-white 
                         ${fullscreen ? "py-3 px-5" : "py-2 px-4"} 
                         text-center rounded-md shadow-md
                       `}
-                    >
-                      <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
-                      {getPromotionsForActivity("darts").map((promo) => (
-                        <div key={promo.id}>
-                          <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
-                            {promo.description}
-                          </div>
-                          {promo.terms && (
-                            <div
-                              className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
-                            >
-                              {promo.terms}
+                        >
+                          <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
+                          {getPromotionsForActivity("darts").map((promo) => (
+                            <div key={promo.id}>
+                              <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
+                                {promo.description}
+                              </div>
+                              {promo.terms && (
+                                <div
+                                  className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
+                                >
+                                  {promo.terms}
+                                </div>
+                              )}
                             </div>
-                          )}
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div
-                className={`
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div
+                    className={`
                   ${colorScheme.priceText} 
                   ${fullscreen ? "text-5xl" : "text-3xl"} 
                   font-bold text-center
                 `}
-              >
-                UNAVAILABLE
-                <div
-                  className={`
+                  >
+                    UNAVAILABLE
+                    <div
+                      className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-2xl mt-4" : "text-xl mt-3"} 
                     font-medium text-center
                   `}
-                >
-                  Please check back later
-                </div>
+                    >
+                      Please check back later
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Laser Tag */}
-        <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
-          <div
-            className={`
+            {/* Laser Tag */}
+            <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
+              <div
+                className={`
               ${colorScheme.cardHeaderBg} 
               ${colorScheme.cardHeaderText} 
               text-center 
@@ -737,15 +762,15 @@ export default function PriceBoard({
               font-bold 
               flex items-center justify-center
             `}
-          >
-            {currentLaserTagSlot ? (
-              <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
-          </div>
-          <div
-            className={`
+              >
+                {currentLaserTagSlot ? (
+                  <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
+                ) : (
+                  "TODAY"
+                )}
+              </div>
+              <div
+                className={`
               ${colorScheme.cardSubheaderBg} 
               ${colorScheme.cardSubheaderText} 
               text-center 
@@ -753,107 +778,490 @@ export default function PriceBoard({
               font-bold 
               flex items-center justify-center
             `}
-          >
-            LASER TAG
-          </div>
-          <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
-            {currentLaserTagSlot ? (
-              <>
-                <div
-                  className={`
+              >
+                LASER TAG
+              </div>
+              <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
+                {currentLaserTagSlot ? (
+                  <>
+                    <div
+                      className={`
                     ${colorScheme.priceText} 
                     ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
                     font-bold 
                     flex items-start
                   `}
-                >
-                  <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
-                  {currentLaserTagPrice}
-                </div>
-                <div
-                  className={`
+                    >
+                      <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
+                      {currentLaserTagPrice}
+                    </div>
+                    <div
+                      className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
                     font-medium text-center
                   `}
-                >
-                  PER PERSON, PER SESSION
-                </div>
-                <div
-                  className={`
+                    >
+                      PER PERSON, PER SESSION
+                    </div>
+                    <div
+                      className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-2xl mt-3" : "text-sm mt-2"} 
                     text-center
                   `}
-                >
-                  44" HEIGHT REQUIREMENT
-                </div>
+                    >
+                      44" HEIGHT REQUIREMENT
+                    </div>
 
-                {/* Promotion banner at the bottom */}
-                {hasPromotion("laserTag") && (
-                  <div className="w-full mt-6">
-                    <div
-                      className={`
+                    {/* Promotion banner at the bottom */}
+                    {hasPromotion("laserTag") && (
+                      <div className="w-full mt-6">
+                        <div
+                          className={`
                         ${colorScheme.cardSubheaderBg} 
                         text-white 
                         ${fullscreen ? "py-3 px-5" : "py-2 px-4"} 
                         text-center rounded-md shadow-md
                       `}
-                    >
-                      <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
-                      {getPromotionsForActivity("laserTag").map((promo) => (
-                        <div key={promo.id}>
-                          <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
-                            {promo.description}
-                          </div>
-                          {promo.terms && (
-                            <div
-                              className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
-                            >
-                              {promo.terms}
+                        >
+                          <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
+                          {getPromotionsForActivity("laserTag").map((promo) => (
+                            <div key={promo.id}>
+                              <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
+                                {promo.description}
+                              </div>
+                              {promo.terms && (
+                                <div
+                                  className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
+                                >
+                                  {promo.terms}
+                                </div>
+                              )}
                             </div>
-                          )}
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div
-                className={`
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div
+                    className={`
                   ${colorScheme.priceText} 
                   ${fullscreen ? "text-5xl" : "text-3xl"} 
                   font-bold text-center
                 `}
-              >
-                UNAVAILABLE
-                <div
-                  className={`
+                  >
+                    UNAVAILABLE
+                    <div
+                      className={`
                     ${colorScheme.accentText} 
                     ${fullscreen ? "text-2xl mt-4" : "text-xl mt-3"} 
                     font-medium text-center
                   `}
-                >
-                  Please check back later
-                </div>
+                    >
+                      Please check back later
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
 
-        {/* Special Friday Promotion Card */}
-        {isFriday && (
-          <SpecialPromotionCard
-            title="FRIDAY SPECIAL"
-            price={19.99}
-            description="PER PERSON"
-            items={["1 Hour of Bowling", "Shoe Rental", "$5 Arcade Card", "Soft Drink or Domestic Draft"]}
-            startTime="16:00"
-            endTime="22:00"
-            darkMode={isDarkMode}
-            fullscreen={fullscreen}
-          />
+        {!isFriday && (
+          <>
+            {/* Regular layout for non-Friday days */}
+            {/* Bowling Card */}
+            <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
+              <div
+                className={`
+              ${colorScheme.cardHeaderBg} 
+              ${colorScheme.cardHeaderText} 
+              text-center 
+              ${fullscreen ? "py-6 text-3xl h-[90px]" : "py-5 text-2xl h-[72px]"} 
+              font-bold 
+              flex items-center justify-center
+            `}
+              >
+                {currentBowlingSlot ? (
+                  <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
+                ) : (
+                  "TODAY"
+                )}
+              </div>
+              <div
+                className={`
+              ${colorScheme.cardSubheaderBg} 
+              ${colorScheme.cardSubheaderText} 
+              text-center 
+              ${fullscreen ? "py-6 text-4xl h-[100px]" : "py-5 text-3xl h-[84px]"} 
+              font-bold 
+              flex items-center justify-center
+            `}
+              >
+                BOWLING
+              </div>
+              <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
+                {currentBowlingSlot ? (
+                  <>
+                    <div
+                      className={`
+                    ${colorScheme.priceText} 
+                    ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
+                    font-bold 
+                    flex items-start
+                  `}
+                    >
+                      <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
+                      {currentBowlingPrice}
+                    </div>
+                    <div
+                      className={`
+                    ${colorScheme.accentText} 
+                    ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
+                    font-medium text-center
+                  `}
+                    >
+                      PER LANE, PER HOUR
+                    </div>
+
+                    {/* Promotion banner at the bottom */}
+                    {hasPromotion("bowling") && (
+                      <div className="w-full mt-6">
+                        <div
+                          className={`
+                        ${colorScheme.cardSubheaderBg} 
+                        text-white 
+                        ${fullscreen ? "py-3 px-5" : "py-2 px-4"} 
+                        text-center rounded-md shadow-md
+                      `}
+                        >
+                          <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
+                          {getPromotionsForActivity("bowling").map((promo) => (
+                            <div key={promo.id}>
+                              <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
+                                {promo.description}
+                              </div>
+                              {promo.terms && (
+                                <div
+                                  className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
+                                >
+                                  {promo.terms}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : currentPrices?.bowling.showWaitTime ? (
+                  // Show wait time when bowling is unavailable but wait time is enabled
+                  <div
+                    className={`
+                  ${colorScheme.waitTimeBg}
+                  p-6 rounded-lg text-center w-full
+                `}
+                  >
+                    <div className="flex items-center justify-center mb-4">
+                      <Clock className={`${fullscreen ? "h-12 w-12" : "h-8 w-8"} ${colorScheme.waitTimeAccent} mr-3`} />
+                      <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.waitTimeText}`}>
+                        WAIT TIME
+                      </div>
+                    </div>
+
+                    {/* Stacked wait time display */}
+                    <div className="flex flex-col items-center">
+                      {/* Get hours and minutes */}
+                      {(() => {
+                        const { hours, minutes } = getHoursAndMinutes(currentPrices?.bowling.waitTime || 30)
+                        return (
+                          <>
+                            {hours > 0 && (
+                              <div
+                                className={`${fullscreen ? "text-7xl" : "text-6xl"} font-bold ${colorScheme.waitTimeAccent}`}
+                              >
+                                {hours} <span className={`${fullscreen ? "text-4xl" : "text-3xl"}`}>HR</span>
+                              </div>
+                            )}
+                            <div
+                              className={`
+                            ${fullscreen ? "text-7xl" : "text-6xl"} 
+                            font-bold 
+                            ${colorScheme.waitTimeAccent}
+                            ${hours > 0 ? "mt-2" : ""}
+                          `}
+                            >
+                              {minutes} <span className={`${fullscreen ? "text-4xl" : "text-3xl"}`}>MIN</span>
+                            </div>
+                          </>
+                        )
+                      })()}
+                    </div>
+
+                    {/* Use the current time slot's price for wait time display */}
+                    <div className={`${fullscreen ? "text-2xl" : "text-xl"} ${colorScheme.waitTimeText} mt-6`}>
+                      CURRENT PRICE:{" "}
+                      <span className={colorScheme.waitTimeAccent}>
+                        $
+                        {currentBowlingSlot
+                          ? currentBowlingSlot.price
+                          : currentPrices?.bowling.timeSlots[0]?.price || 0}
+                      </span>
+                    </div>
+                    <div
+                      className={`${fullscreen ? "text-xl" : "text-lg"} ${colorScheme.waitTimeText} mt-2 opacity-80`}
+                    >
+                      PER LANE, PER HOUR
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={`
+                  ${colorScheme.priceText} 
+                  ${fullscreen ? "text-5xl" : "text-3xl"} 
+                  font-bold text-center
+                `}
+                  >
+                    UNAVAILABLE
+                    <div
+                      className={`
+                    ${colorScheme.accentText} 
+                    ${fullscreen ? "text-2xl mt-4" : "text-xl mt-3"} 
+                    font-medium text-center
+                  `}
+                    >
+                      Please check back later
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Interactive Darts */}
+            <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
+              <div
+                className={`
+              ${colorScheme.cardHeaderBg} 
+              ${colorScheme.cardHeaderText} 
+              text-center 
+              ${fullscreen ? "py-6 text-3xl h-[90px]" : "py-5 text-2xl h-[72px]"} 
+              font-bold 
+              flex items-center justify-center
+            `}
+              >
+                {currentDartsSlot ? (
+                  <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
+                ) : (
+                  "TODAY"
+                )}
+              </div>
+              <div
+                className={`
+              ${colorScheme.cardSubheaderBg} 
+              ${colorScheme.cardSubheaderText} 
+              text-center 
+              ${fullscreen ? "py-6 text-4xl h-[100px]" : "py-5 text-3xl h-[84px]"} 
+              font-bold 
+              flex items-center justify-center
+            `}
+              >
+                INTERACTIVE DARTS
+              </div>
+              <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
+                {currentDartsSlot ? (
+                  <>
+                    <div
+                      className={`
+                    ${colorScheme.priceText} 
+                    ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
+                    font-bold 
+                    flex items-start
+                  `}
+                    >
+                      <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
+                      {currentDartsPrice}
+                    </div>
+                    <div
+                      className={`
+                    ${colorScheme.accentText} 
+                    ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
+                    font-medium text-center
+                  `}
+                    >
+                      PER LANE, PER HOUR
+                    </div>
+
+                    {/* Promotion banner at the bottom */}
+                    {hasPromotion("darts") && (
+                      <div className="w-full mt-6">
+                        <div
+                          className={`
+                        ${colorScheme.cardSubheaderBg} 
+                        text-white 
+                        ${fullscreen ? "py-3 px-5" : "py-2 px-4"} 
+                        text-center rounded-md shadow-md
+                      `}
+                        >
+                          <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
+                          {getPromotionsForActivity("darts").map((promo) => (
+                            <div key={promo.id}>
+                              <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
+                                {promo.description}
+                              </div>
+                              {promo.terms && (
+                                <div
+                                  className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
+                                >
+                                  {promo.terms}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div
+                    className={`
+                  ${colorScheme.priceText} 
+                  ${fullscreen ? "text-5xl" : "text-3xl"} 
+                  font-bold text-center
+                `}
+                  >
+                    UNAVAILABLE
+                    <div
+                      className={`
+                    ${colorScheme.accentText} 
+                    ${fullscreen ? "text-2xl mt-4" : "text-xl mt-3"} 
+                    font-medium text-center
+                  `}
+                    >
+                      Please check back later
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Laser Tag */}
+            <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
+              <div
+                className={`
+              ${colorScheme.cardHeaderBg} 
+              ${colorScheme.cardHeaderText} 
+              text-center 
+              ${fullscreen ? "py-6 text-3xl h-[90px]" : "py-5 text-2xl h-[72px]"} 
+              font-bold 
+              flex items-center justify-center
+            `}
+              >
+                {currentLaserTagSlot ? (
+                  <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
+                ) : (
+                  "TODAY"
+                )}
+              </div>
+              <div
+                className={`
+              ${colorScheme.cardSubheaderBg} 
+              ${colorScheme.cardSubheaderText} 
+              text-center 
+              ${fullscreen ? "py-6 text-4xl h-[100px]" : "py-5 text-3xl h-[84px]"} 
+              font-bold 
+              flex items-center justify-center
+            `}
+              >
+                LASER TAG
+              </div>
+              <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-8`}>
+                {currentLaserTagSlot ? (
+                  <>
+                    <div
+                      className={`
+                    ${colorScheme.priceText} 
+                    ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
+                    font-bold 
+                    flex items-start
+                  `}
+                    >
+                      <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
+                      {currentLaserTagPrice}
+                    </div>
+                    <div
+                      className={`
+                    ${colorScheme.accentText} 
+                    ${fullscreen ? "text-3xl mt-6" : "text-xl mt-4"} 
+                    font-medium text-center
+                  `}
+                    >
+                      PER PERSON, PER SESSION
+                    </div>
+                    <div
+                      className={`
+                    ${colorScheme.accentText} 
+                    ${fullscreen ? "text-2xl mt-3" : "text-sm mt-2"} 
+                    text-center
+                  `}
+                    >
+                      44" HEIGHT REQUIREMENT
+                    </div>
+
+                    {/* Promotion banner at the bottom */}
+                    {hasPromotion("laserTag") && (
+                      <div className="w-full mt-6">
+                        <div
+                          className={`
+                        ${colorScheme.cardSubheaderBg} 
+                        text-white 
+                        ${fullscreen ? "py-3 px-5" : "py-2 px-4"} 
+                        text-center rounded-md shadow-md
+                      `}
+                        >
+                          <div className={fullscreen ? "text-2xl font-bold" : "text-lg font-bold"}>SPECIAL OFFER</div>
+                          {getPromotionsForActivity("laserTag").map((promo) => (
+                            <div key={promo.id}>
+                              <div className={fullscreen ? "text-xl font-medium" : "text-sm font-medium"}>
+                                {promo.description}
+                              </div>
+                              {promo.terms && (
+                                <div
+                                  className={`${fullscreen ? "text-sm" : "text-xs"} mt-1 font-medium ${colorScheme.bannerBg} py-1 px-2 rounded`}
+                                >
+                                  {promo.terms}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div
+                    className={`
+                  ${colorScheme.priceText} 
+                  ${fullscreen ? "text-5xl" : "text-3xl"} 
+                  font-bold text-center
+                `}
+                  >
+                    UNAVAILABLE
+                    <div
+                      className={`
+                    ${colorScheme.accentText} 
+                    ${fullscreen ? "text-2xl mt-4" : "text-xl mt-3"} 
+                    font-medium text-center
+                  `}
+                    >
+                      Please check back later
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
         )}
       </div>
 
