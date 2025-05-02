@@ -94,21 +94,23 @@ export default function SpecialPromotionCard({
         {title}
       </div>
       <div className={`flex-1 ${colorScheme.cardBackground} flex flex-col items-center justify-center p-6`}>
+        {/* Reduced font size for price and adjusted container */}
         <div
           className={`
             ${colorScheme.priceText} 
-            ${fullscreen ? "text-[140px] leading-none" : "text-7xl"} 
+            ${fullscreen ? "text-[120px] leading-none" : "text-7xl"} 
             font-bold 
             flex items-start
+            w-full text-center justify-center
           `}
         >
-          <span className={fullscreen ? "text-[70px] mt-6" : "text-4xl mt-2"}>$</span>
+          <span className={fullscreen ? "text-[60px] mt-6" : "text-4xl mt-2"}>$</span>
           {price.toFixed(2)}
         </div>
         <div
           className={`
             ${colorScheme.accentText} 
-            ${fullscreen ? "text-3xl mt-4" : "text-xl mt-3"} 
+            ${fullscreen ? "text-3xl mt-3" : "text-xl mt-2"} 
             font-medium text-center
           `}
         >
