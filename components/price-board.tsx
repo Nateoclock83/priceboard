@@ -633,16 +633,24 @@ export default function PriceBoard({
             </div>
 
             {/* Special Friday Promotion Card */}
-            <SpecialPromotionCard
-              title="FRIDAY SPECIAL"
-              price={19.99}
-              description="PER PERSON"
-              items={["1 Hour of Bowling", "Shoe Rental", "$5 Arcade Card", "Soft Drink or Domestic Draft"]}
-              startTime="16:00"
-              endTime="22:00"
-              darkMode={isDarkMode}
-              fullscreen={fullscreen}
-            />
+            {isFriday && (
+              <SpecialPromotionCard
+                title="FRIDAY SPECIAL"
+                price={19.99}
+                description="PER PERSON"
+                items={[
+                  "1 Hour of Bowling",
+                  "Shoe Rental",
+                  "$5 Arcade Card",
+                  "Soft Drink or Domestic Draft",
+                  "Up to 6 People Per Lane",
+                ]}
+                startTime="17:00"
+                endTime="22:00"
+                darkMode={isDarkMode}
+                fullscreen={fullscreen}
+              />
+            )}
 
             {/* Interactive Darts */}
             <div className={`flex flex-col rounded-xl overflow-hidden ${colorScheme.shadow} h-full relative`}>
