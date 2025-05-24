@@ -10,6 +10,7 @@ export interface ActivityPrice {
   isAvailable: boolean
   showWaitTime?: boolean
   waitTime?: number
+  priceText?: string
 }
 
 export interface DayPrices {

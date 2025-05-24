@@ -286,6 +286,23 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
     )
   }
 
+  const handleActivityPriceTextChange = (day: string, activity: string, value: string) => {
+    setPrices(
+      prices.map((dayPrice) => {
+        if (dayPrice.day === day) {
+          return {
+            ...dayPrice,
+            [activity]: {
+              ...(dayPrice[activity as keyof DayPrices] as ActivityPrice),
+              priceText: value,
+            },
+          }
+        }
+        return dayPrice
+      }),
+    )
+  }
+
   const handleSave = async () => {
     setIsLoading(true)
     try {
@@ -795,6 +812,18 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                               disabled={!dayPrice.bowling.isAvailable}
                             />
                           </div>
+
+                          <div className="space-y-2 mt-4">
+                            <Label htmlFor={`bowling-price-text-${dayPrice.day}`}>Price Text</Label>
+                            <Input
+                              id={`bowling-price-text-${dayPrice.day}`}
+                              value={dayPrice.bowling.priceText || ""}
+                              onChange={(e) => handleActivityPriceTextChange(dayPrice.day, "bowling", e.target.value)}
+                              placeholder="e.g., PER LANE, PER HOUR"
+                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                              disabled={!dayPrice.bowling.isAvailable}
+                            />
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -960,6 +989,18 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                               disabled={!dayPrice.darts.isAvailable}
                             />
                           </div>
+
+                          <div className="space-y-2 mt-4">
+                            <Label htmlFor={`darts-price-text-${dayPrice.day}`}>Price Text</Label>
+                            <Input
+                              id={`darts-price-text-${dayPrice.day}`}
+                              value={dayPrice.darts.priceText || ""}
+                              onChange={(e) => handleActivityPriceTextChange(dayPrice.day, "darts", e.target.value)}
+                              placeholder="e.g., PER LANE, PER HOUR"
+                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                              disabled={!dayPrice.darts.isAvailable}
+                            />
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -1121,6 +1162,18 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                               value={dayPrice.laserTag.note || ""}
                               onChange={(e) => handleActivityNoteChange(dayPrice.day, "laserTag", e.target.value)}
                               placeholder="e.g., per person, per session"
+                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                              disabled={!dayPrice.laserTag.isAvailable}
+                            />
+                          </div>
+
+                          <div className="space-y-2 mt-4">
+                            <Label htmlFor={`laserTag-price-text-${dayPrice.day}`}>Price Text</Label>
+                            <Input
+                              id={`laserTag-price-text-${dayPrice.day}`}
+                              value={dayPrice.laserTag.priceText || ""}
+                              onChange={(e) => handleActivityPriceTextChange(dayPrice.day, "laserTag", e.target.value)}
+                              placeholder="e.g., PER PERSON, PER SESSION"
                               className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                               disabled={!dayPrice.laserTag.isAvailable}
                             />

@@ -516,7 +516,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                     >
-                      PER LANE, PER HOUR
+                      {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                     </div>
 
                     {/* Promotion banner at the bottom */}
@@ -606,7 +606,7 @@ export default function PriceBoard({
                     <div
                       className={`${fullscreen ? "text-xl" : "text-lg"} ${colorScheme.waitTimeText} mt-2 opacity-80`}
                     >
-                      PER LANE, PER HOUR
+                      {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                     </div>
                   </div>
                 ) : (
@@ -703,7 +703,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                     >
-                      PER LANE, PER HOUR
+                      {currentPrices?.darts.priceText || "PER LANE, PER HOUR"}
                     </div>
 
                     {/* Promotion banner at the bottom */}
@@ -810,7 +810,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                     >
-                      PER PERSON, PER SESSION
+                      {currentPrices?.laserTag.priceText || "PER PERSON, PER SESSION"}
                     </div>
                     <div
                       className={`
@@ -931,7 +931,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                     >
-                      PER LANE, PER HOUR
+                      {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                     </div>
 
                     {/* Promotion banner at the bottom */}
@@ -1021,7 +1021,7 @@ export default function PriceBoard({
                     <div
                       className={`${fullscreen ? "text-xl" : "text-lg"} ${colorScheme.waitTimeText} mt-2 opacity-80`}
                     >
-                      PER LANE, PER HOUR
+                      {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                     </div>
                   </div>
                 ) : (
@@ -1098,7 +1098,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                     >
-                      PER LANE, PER HOUR
+                      {currentPrices?.darts.priceText || "PER LANE, PER HOUR"}
                     </div>
 
                     {/* Promotion banner at the bottom */}
@@ -1205,7 +1205,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                     >
-                      PER PERSON, PER SESSION
+                      {currentPrices?.laserTag.priceText || "PER PERSON, PER SESSION"}
                     </div>
                     <div
                       className={`
