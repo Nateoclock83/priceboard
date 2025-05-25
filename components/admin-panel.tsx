@@ -802,24 +802,24 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                           </Button>
 
                           <div className="space-y-2 mt-4">
-                            <Label htmlFor={`bowling-note-${dayPrice.day}`}>Additional Note</Label>
-                            <Input
-                              id={`bowling-note-${dayPrice.day}`}
-                              value={dayPrice.bowling.note || ""}
-                              onChange={(e) => handleActivityNoteChange(dayPrice.day, "bowling", e.target.value)}
-                              placeholder="e.g., 1-6 guests per lane"
-                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                              disabled={!dayPrice.bowling.isAvailable}
-                            />
-                          </div>
-
-                          <div className="space-y-2 mt-4">
                             <Label htmlFor={`bowling-price-text-${dayPrice.day}`}>Price Text</Label>
                             <Input
                               id={`bowling-price-text-${dayPrice.day}`}
                               value={dayPrice.bowling.priceText || ""}
                               onChange={(e) => handleActivityPriceTextChange(dayPrice.day, "bowling", e.target.value)}
                               placeholder="e.g., PER LANE, PER HOUR"
+                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                              disabled={!dayPrice.bowling.isAvailable}
+                            />
+                          </div>
+
+                          <div className="space-y-2 mt-4">
+                            <Label htmlFor={`bowling-note-${dayPrice.day}`}>Additional Note</Label>
+                            <Input
+                              id={`bowling-note-${dayPrice.day}`}
+                              value={dayPrice.bowling.note || ""}
+                              onChange={(e) => handleActivityNoteChange(dayPrice.day, "bowling", e.target.value)}
+                              placeholder="e.g., 1-6 guests per lane"
                               className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                               disabled={!dayPrice.bowling.isAvailable}
                             />
@@ -979,24 +979,24 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                           </Button>
 
                           <div className="space-y-2 mt-4">
-                            <Label htmlFor={`darts-note-${dayPrice.day}`}>Additional Note</Label>
-                            <Input
-                              id={`darts-note-${dayPrice.day}`}
-                              value={dayPrice.darts.note || ""}
-                              onChange={(e) => handleActivityNoteChange(dayPrice.day, "darts", e.target.value)}
-                              placeholder="e.g., per lane"
-                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                              disabled={!dayPrice.darts.isAvailable}
-                            />
-                          </div>
-
-                          <div className="space-y-2 mt-4">
                             <Label htmlFor={`darts-price-text-${dayPrice.day}`}>Price Text</Label>
                             <Input
                               id={`darts-price-text-${dayPrice.day}`}
                               value={dayPrice.darts.priceText || ""}
                               onChange={(e) => handleActivityPriceTextChange(dayPrice.day, "darts", e.target.value)}
                               placeholder="e.g., PER LANE, PER HOUR"
+                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                              disabled={!dayPrice.darts.isAvailable}
+                            />
+                          </div>
+
+                          <div className="space-y-2 mt-4">
+                            <Label htmlFor={`darts-note-${dayPrice.day}`}>Additional Note</Label>
+                            <Input
+                              id={`darts-note-${dayPrice.day}`}
+                              value={dayPrice.darts.note || ""}
+                              onChange={(e) => handleActivityNoteChange(dayPrice.day, "darts", e.target.value)}
+                              placeholder="e.g., per lane"
                               className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                               disabled={!dayPrice.darts.isAvailable}
                             />
@@ -1156,24 +1156,24 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                           </Button>
 
                           <div className="space-y-2 mt-4">
-                            <Label htmlFor={`laserTag-note-${dayPrice.day}`}>Additional Note</Label>
-                            <Input
-                              id={`laserTag-note-${dayPrice.day}`}
-                              value={dayPrice.laserTag.note || ""}
-                              onChange={(e) => handleActivityNoteChange(dayPrice.day, "laserTag", e.target.value)}
-                              placeholder="e.g., per person, per session"
-                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                              disabled={!dayPrice.laserTag.isAvailable}
-                            />
-                          </div>
-
-                          <div className="space-y-2 mt-4">
                             <Label htmlFor={`laserTag-price-text-${dayPrice.day}`}>Price Text</Label>
                             <Input
                               id={`laserTag-price-text-${dayPrice.day}`}
                               value={dayPrice.laserTag.priceText || ""}
                               onChange={(e) => handleActivityPriceTextChange(dayPrice.day, "laserTag", e.target.value)}
                               placeholder="e.g., PER PERSON, PER SESSION"
+                              className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                              disabled={!dayPrice.laserTag.isAvailable}
+                            />
+                          </div>
+
+                          <div className="space-y-2 mt-4">
+                            <Label htmlFor={`laserTag-note-${dayPrice.day}`}>Additional Note</Label>
+                            <Input
+                              id={`laserTag-note-${dayPrice.day}`}
+                              value={dayPrice.laserTag.note || ""}
+                              onChange={(e) => handleActivityNoteChange(dayPrice.day, "laserTag", e.target.value)}
+                              placeholder="e.g., per person, per session"
                               className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                               disabled={!dayPrice.laserTag.isAvailable}
                             />

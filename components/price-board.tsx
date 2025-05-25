@@ -509,6 +509,17 @@ export default function PriceBoard({
                       <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
                       {currentBowlingPrice}
                     </div>
+                    {currentPrices?.bowling.note && (
+                      <div
+                        className={`
+                        ${colorScheme.accentText} 
+                        ${fullscreen ? "text-xl mt-2" : "text-sm mt-1"} 
+                        text-center opacity-80
+                      `}
+                      >
+                        {currentPrices.bowling.note}
+                      </div>
+                    )}
                     <div
                       className={`
                     ${colorScheme.accentText} 
@@ -696,6 +707,17 @@ export default function PriceBoard({
                       <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
                       {currentDartsPrice}
                     </div>
+                    {currentPrices?.darts.note && (
+                      <div
+                        className={`
+                        ${colorScheme.accentText} 
+                        ${fullscreen ? "text-xl mt-2" : "text-sm mt-1"} 
+                        text-center opacity-80
+                      `}
+                      >
+                        {currentPrices.darts.note}
+                      </div>
+                    )}
                     <div
                       className={`
                     ${colorScheme.accentText} 
@@ -821,6 +843,17 @@ export default function PriceBoard({
                     >
                       44" HEIGHT REQUIREMENT
                     </div>
+                    {currentPrices?.laserTag.note && (
+                      <div
+                        className={`
+                        ${colorScheme.accentText} 
+                        ${fullscreen ? "text-xl mt-2" : "text-sm mt-1"} 
+                        text-center opacity-80
+                      `}
+                      >
+                        {currentPrices.laserTag.note}
+                      </div>
+                    )}
 
                     {/* Promotion banner at the bottom */}
                     {hasPromotion("laserTag") && (
@@ -924,6 +957,17 @@ export default function PriceBoard({
                       <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
                       {currentBowlingPrice}
                     </div>
+                    {currentPrices?.bowling.note && (
+                      <div
+                        className={`
+                        ${colorScheme.accentText} 
+                        ${fullscreen ? "text-xl mt-2" : "text-sm mt-1"} 
+                        text-center opacity-80
+                      `}
+                      >
+                        {currentPrices.bowling.note}
+                      </div>
+                    )}
                     <div
                       className={`
                     ${colorScheme.accentText} 
@@ -1091,6 +1135,17 @@ export default function PriceBoard({
                       <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
                       {currentDartsPrice}
                     </div>
+                    {currentPrices?.darts.note && (
+                      <div
+                        className={`
+                        ${colorScheme.accentText} 
+                        ${fullscreen ? "text-xl mt-2" : "text-sm mt-1"} 
+                        text-center opacity-80
+                      `}
+                      >
+                        {currentPrices.darts.note}
+                      </div>
+                    )}
                     <div
                       className={`
                     ${colorScheme.accentText} 
@@ -1216,6 +1271,17 @@ export default function PriceBoard({
                     >
                       44" HEIGHT REQUIREMENT
                     </div>
+                    {currentPrices?.laserTag.note && (
+                      <div
+                        className={`
+                        ${colorScheme.accentText} 
+                        ${fullscreen ? "text-xl mt-2" : "text-sm mt-1"} 
+                        text-center opacity-80
+                      `}
+                      >
+                        {currentPrices.laserTag.note}
+                      </div>
+                    )}
 
                     {/* Promotion banner at the bottom */}
                     {hasPromotion("laserTag") && (
