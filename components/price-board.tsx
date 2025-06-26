@@ -266,6 +266,14 @@ export default function PriceBoard({
     waitTimeAccent: isDarkMode ? "text-[#e67e22]" : "text-[#ff8210]",
   }
 
+  // Helper function to determine if any current timeframe uses per-person pricing
+  const hasPerPersonPricing = () => {
+    if (!currentPrices) return false
+
+    const activities = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot]
+    return activities.some((slot) => slot && slot.pricingType === "perPerson")
+  }
+
   // Override bowling price with dynamic pricing
   // const dynamicBowlingPrice = currentBowlingSlot
   //   ? getDynamicBowlingPrice(currentDay, currentBowlingSlot)
@@ -817,11 +825,13 @@ export default function PriceBoard({
 
       {/* Footer */}
       <div className={fullscreen ? "mt-10 text-center" : "mt-8 text-center"}>
-        {/* Always show shoe rental */}
-        <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
-          <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
-          <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
-        </div>
+        {/* Show shoe rental only when not using per-person pricing */}
+        {!hasPerPersonPricing() && (
+          <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
+            <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
+            <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
+          </div>
+        )}
         {isEditingDisclaimer ? (
           <div className="relative w-full max-w-5xl mx-auto">
             <textarea
