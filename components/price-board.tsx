@@ -483,10 +483,6 @@ export default function PriceBoard({
                 >
                   <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
                   {currentBowlingSlot.price}
-                  {currentBowlingSlot.pricingType === "perPerson" && (
-                    <span className={fullscreen ? "text-[60px] mt-12" : "text-3xl mt-4"}>/pp</span>
-                  )}
-                  <span className={fullscreen ? "text-[60px] mt-12" : "text-3xl mt-4"}>/hr</span>
                 </div>
                 <div
                   className={`
@@ -645,10 +641,6 @@ export default function PriceBoard({
                 >
                   <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
                   {currentDartsSlot.price}
-                  {currentDartsSlot.pricingType === "perPerson" && (
-                    <span className={fullscreen ? "text-[60px] mt-12" : "text-3xl mt-4"}>/pp</span>
-                  )}
-                  <span className={fullscreen ? "text-[60px] mt-12" : "text-3xl mt-4"}>/hr</span>
                 </div>
                 <div
                   className={`
@@ -750,10 +742,6 @@ export default function PriceBoard({
                 >
                   <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
                   {currentLaserTagSlot.price}
-                  {currentLaserTagSlot.pricingType === "perPerson" && (
-                    <span className={fullscreen ? "text-[60px] mt-12" : "text-3xl mt-4"}>/pp</span>
-                  )}
-                  <span className={fullscreen ? "text-[60px] mt-12" : "text-3xl mt-4"}>/hr</span>
                 </div>
                 <div
                   className={`
