@@ -155,6 +155,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
               startTime: newEndTime,
               endTime: "CLOSE",
               price: lastSlot.price,
+              pricingType: lastSlot.pricingType || "perLane",
             })
 
             return {
@@ -178,6 +179,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                     startTime: defaultStartTime,
                     endTime: "CLOSE",
                     price: lastSlot ? lastSlot.price : 0,
+                    pricingType: lastSlot ? lastSlot.pricingType : "perLane",
                   },
                 ],
               },
@@ -769,19 +771,41 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                                 </div>
                               </div>
 
-                              <div className="space-y-2">
-                                <Label htmlFor={`bowling-price-${index}`}>Price per hour</Label>
-                                <div className="flex items-center">
-                                  <span className="mr-2 text-[#ff8210] font-bold">$</span>
-                                  <Input
-                                    id={`bowling-price-${index}`}
-                                    type="number"
-                                    value={slot.price}
-                                    onChange={(e) =>
-                                      handleTimeSlotChange(dayPrice.day, "bowling", index, "price", e.target.value)
+                              <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor={`bowling-pricing-type-${index}`}>Pricing Type</Label>
+                                  <Select
+                                    value={slot.pricingType || "perLane"}
+                                    onValueChange={(value) =>
+                                      handleTimeSlotChange(dayPrice.day, "bowling", index, "pricingType", value)
                                     }
-                                    className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                                  />
+                                  >
+                                    <SelectTrigger className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]">
+                                      <SelectValue placeholder="Select pricing type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="perLane">Per Lane</SelectItem>
+                                      <SelectItem value="perPerson">Per Person</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label htmlFor={`bowling-price-${index}`}>
+                                    Price {slot.pricingType === "perPerson" ? "per person" : "per lane"}
+                                  </Label>
+                                  <div className="flex items-center">
+                                    <span className="mr-2 text-[#ff8210] font-bold">$</span>
+                                    <Input
+                                      id={`bowling-price-${index}`}
+                                      type="number"
+                                      value={slot.price}
+                                      onChange={(e) =>
+                                        handleTimeSlotChange(dayPrice.day, "bowling", index, "price", e.target.value)
+                                      }
+                                      className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                                    />
+                                  </div>
                                 </div>
                               </div>
 
@@ -946,19 +970,41 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                                 </div>
                               </div>
 
-                              <div className="space-y-2">
-                                <Label htmlFor={`darts-price-${index}`}>Price per hour</Label>
-                                <div className="flex items-center">
-                                  <span className="mr-2 text-[#ff8210] font-bold">$</span>
-                                  <Input
-                                    id={`darts-price-${index}`}
-                                    type="number"
-                                    value={slot.price}
-                                    onChange={(e) =>
-                                      handleTimeSlotChange(dayPrice.day, "darts", index, "price", e.target.value)
+                              <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor={`darts-pricing-type-${index}`}>Pricing Type</Label>
+                                  <Select
+                                    value={slot.pricingType || "perLane"}
+                                    onValueChange={(value) =>
+                                      handleTimeSlotChange(dayPrice.day, "darts", index, "pricingType", value)
                                     }
-                                    className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                                  />
+                                  >
+                                    <SelectTrigger className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]">
+                                      <SelectValue placeholder="Select pricing type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="perLane">Per Lane</SelectItem>
+                                      <SelectItem value="perPerson">Per Person</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label htmlFor={`darts-price-${index}`}>
+                                    Price {slot.pricingType === "perPerson" ? "per person" : "per lane"}
+                                  </Label>
+                                  <div className="flex items-center">
+                                    <span className="mr-2 text-[#ff8210] font-bold">$</span>
+                                    <Input
+                                      id={`darts-price-${index}`}
+                                      type="number"
+                                      value={slot.price}
+                                      onChange={(e) =>
+                                        handleTimeSlotChange(dayPrice.day, "darts", index, "price", e.target.value)
+                                      }
+                                      className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                                    />
+                                  </div>
                                 </div>
                               </div>
 
@@ -1123,19 +1169,41 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                                 </div>
                               </div>
 
-                              <div className="space-y-2">
-                                <Label htmlFor={`laserTag-price-${index}`}>Price per session</Label>
-                                <div className="flex items-center">
-                                  <span className="mr-2 text-[#ff8210] font-bold">$</span>
-                                  <Input
-                                    id={`laserTag-price-${index}`}
-                                    type="number"
-                                    value={slot.price}
-                                    onChange={(e) =>
-                                      handleTimeSlotChange(dayPrice.day, "laserTag", index, "price", e.target.value)
+                              <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor={`laserTag-pricing-type-${index}`}>Pricing Type</Label>
+                                  <Select
+                                    value={slot.pricingType || "perLane"}
+                                    onValueChange={(value) =>
+                                      handleTimeSlotChange(dayPrice.day, "laserTag", index, "pricingType", value)
                                     }
-                                    className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                                  />
+                                  >
+                                    <SelectTrigger className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]">
+                                      <SelectValue placeholder="Select pricing type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="perLane">Per Lane</SelectItem>
+                                      <SelectItem value="perPerson">Per Person</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label htmlFor={`laserTag-price-${index}`}>
+                                    Price {slot.pricingType === "perPerson" ? "per person" : "per lane"}
+                                  </Label>
+                                  <div className="flex items-center">
+                                    <span className="mr-2 text-[#ff8210] font-bold">$</span>
+                                    <Input
+                                      id={`laserTag-price-${index}`}
+                                      type="number"
+                                      value={slot.price}
+                                      onChange={(e) =>
+                                        handleTimeSlotChange(dayPrice.day, "laserTag", index, "price", e.target.value)
+                                      }
+                                      className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                                    />
+                                  </div>
                                 </div>
                               </div>
 
