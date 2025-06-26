@@ -266,81 +266,6 @@ export default function PriceBoard({
     waitTimeAccent: isDarkMode ? "text-[#e67e22]" : "text-[#ff8210]",
   }
 
-  // Helper function to determine if any current timeframe uses per-person pricing
-  const hasPerPersonPricing = () => {
-    if (!currentPrices) return false
-
-    const activities = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot]
-    return activities.some((slot) => slot && slot.pricingType === "perPerson")
-  }
-
-  // Helper function to get the primary pricing mode for subheading
-  const getPrimaryPricingMode = () => {
-    if (!currentPrices) return "perLane"
-
-    // Check current time slots for each activity
-    const currentSlots = [
-      getCurrentTimeSlot(currentPrices.bowling.timeSlots, currentPrices.bowling.isAvailable),
-      getCurrentTimeSlot(currentPrices.darts.timeSlots, currentPrices.darts.isAvailable),
-      getCurrentTimeSlot(currentPrices.laserTag.timeSlots, currentPrices.laserTag.isAvailable),
-    ].filter(Boolean)
-
-    // If any current slot uses per-person pricing, use that for the subheading
-    const hasPerPerson = currentSlots.some((slot) => slot.pricingType === "perPerson")
-    return hasPerPerson ? "perPerson" : "perLane"
-  }
-
-  // Dynamic text content based on current pricing modes
-  const primaryMode = getPrimaryPricingMode()
-  const subheadingText =
-    primaryMode === "perPerson"
-      ? "HOURLY RATES LISTED PER PERSON."
-      : "HOURLY RATES LISTED PER LANE, GROUPS OF 1-6 PLAYERS PER LANE."
-
-  const shouldShowShoeRental = primaryMode === "perLane"
-
-  // Dynamic pricing overrides based on pricingMode
-  // const getDynamicBowlingPrice = (day: string, timeSlot: TimeSlot) => {
-  //   if (pricingMode === "perPerson") {
-  //     switch (day) {
-  //       case "Thursday":
-  //         return 15
-  //       case "Friday":
-  //         if (timeSlot.startTime >= "17:00" && timeSlot.startTime < "20:00") return 16
-  //         if (timeSlot.startTime >= "20:00") return 18
-  //         return 16
-  //       case "Saturday":
-  //         if (timeSlot.startTime >= "12:00" && timeSlot.startTime < "16:00") return 16
-  //         if (timeSlot.startTime >= "16:00") return 18
-  //         return 16
-  //       case "Sunday":
-  //         if (timeSlot.startTime >= "12:00" && timeSlot.startTime < "15:00") return 15
-  //         if (timeSlot.startTime >= "15:00" && timeSlot.startTime < "18:00") return 17
-  //         return 15
-  //       default:
-  //         return timeSlot.price
-  //     }
-  //   } else {
-  //     // perLane mode - use specific overrides for certain days
-  //     switch (day) {
-  //       case "Thursday":
-  //         return 20
-  //       case "Friday":
-  //         return 42
-  //       case "Saturday":
-  //         if (timeSlot.startTime >= "12:00" && timeSlot.startTime < "16:00") return 33
-  //         if (timeSlot.startTime >= "16:00") return 42
-  //         return timeSlot.price
-  //       case "Sunday":
-  //         if (timeSlot.startTime >= "12:00" && timeSlot.startTime < "15:00") return 33
-  //         if (timeSlot.startTime >= "15:00" && timeSlot.startTime < "18:00") return 42
-  //         return timeSlot.price
-  //       default:
-  //         return timeSlot.price
-  //     }
-  //   }
-  // }
-
   // Override bowling price with dynamic pricing
   // const dynamicBowlingPrice = currentBowlingSlot
   //   ? getDynamicBowlingPrice(currentDay, currentBowlingSlot)
@@ -507,19 +432,6 @@ export default function PriceBoard({
             {currentTime}
           </div>
         </div>
-        {/* Pricing Mode Badge */}
-        <div className="flex justify-center mb-4">
-          <div
-            className={`
-              ${colorScheme.cardSubheaderBg} 
-              text-white 
-              ${fullscreen ? "px-6 py-2 text-lg" : "px-4 py-1 text-sm"} 
-              rounded-full font-medium shadow-md
-            `}
-          >
-            Now Charging: {primaryMode === "perPerson" ? "Per Person Pricing" : "Per Lane Pricing"}
-          </div>
-        </div>
         <div
           className={`
             ${fullscreen ? "mt-6 text-3xl" : "mt-4 text-2xl"} 
@@ -527,7 +439,7 @@ export default function PriceBoard({
             ${colorScheme.text}
           `}
         >
-          {subheadingText}
+          HOURLY RATES LISTED PER LANE, GROUPS OF 1-6 PER LANE.
         </div>
       </div>
 
@@ -917,12 +829,11 @@ export default function PriceBoard({
 
       {/* Footer */}
       <div className={fullscreen ? "mt-10 text-center" : "mt-8 text-center"}>
-        {shouldShowShoeRental && (
-          <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
-            <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
-            <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
-          </div>
-        )}
+        {/* Always show shoe rental */}
+        <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
+          <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
+          <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
+        </div>
         {isEditingDisclaimer ? (
           <div className="relative w-full max-w-5xl mx-auto">
             <textarea
