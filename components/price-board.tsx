@@ -264,34 +264,7 @@ export default function PriceBoard({
     waitTimeBg: isDarkMode ? "bg-[#1e293b]" : "bg-[#f8f9fa]",
     waitTimeText: isDarkMode ? "text-white" : "text-[#2d455a]",
     waitTimeAccent: isDarkMode ? "text-[#e67e22]" : "text-[#ff8210]",
-    timeWindowText: isDarkMode ? "text-[#94a3b8]" : "text-gray-600",
   }
-
-  // Helper function to determine if any current timeframe uses per-person pricing
-  const hasPerPersonPricing = () => {
-    if (!currentPrices) return false
-
-    const activities = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot]
-    return activities.some((slot) => slot && slot.pricingType === "perPerson")
-  }
-
-  // Bowling price display
-  const bowlingPriceText =
-    currentBowlingSlot?.pricingType === "perPerson"
-      ? "PER PERSON, PER HOUR"
-      : currentPrices?.bowling.priceText || "PER LANE, PER HOUR"
-
-  // Darts price display
-  const dartsPriceText =
-    currentDartsSlot?.pricingType === "perPerson"
-      ? "PER PERSON, PER HOUR"
-      : currentPrices?.darts.priceText || "PER LANE, PER HOUR"
-
-  // Laser tag price display
-  const laserTagPriceText =
-    currentLaserTagSlot?.pricingType === "perPerson"
-      ? "PER PERSON, PER HOUR"
-      : currentPrices?.laserTag.priceText || "PER PERSON, PER SESSION"
 
   // If Late Night Lanes is active, show the Late Night Lanes UI
   if (isLateNight && lateNightLanes && lateNightLanes.isActive) {
@@ -434,7 +407,8 @@ export default function PriceBoard({
             ${colorScheme.text}
           `}
         >
-          HOURLY RATES LISTED PER LANE, GROUPS OF 1-6 PER LANE.
+          HOURLY RATES LISTED <span className="underline font-semibold">PER LANE</span>, GROUPS OF{" "}
+          <span className="underline font-semibold">1-6 PLAYERS PER LANE</span>.
         </div>
       </div>
 
@@ -452,7 +426,11 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            CURRENT RATE
+            {currentBowlingSlot ? (
+              <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
+            ) : (
+              "TODAY"
+            )}
           </div>
           <div
             className={`
@@ -470,10 +448,15 @@ export default function PriceBoard({
             {currentBowlingSlot ? (
               <>
                 <div
-                  className={`${colorScheme.priceText} ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} font-bold flex items-start`}
+                  className={`
+                    ${colorScheme.priceText} 
+                    ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
+                    font-bold 
+                    flex items-start
+                  `}
                 >
                   <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
-                  {currentBowlingSlot.price}
+                  {currentBowlingPrice}
                 </div>
                 <div
                   className={`
@@ -482,18 +465,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                 >
-                  {bowlingPriceText}
-                </div>
-
-                {/* Current Pricing Window */}
-                <div
-                  className={`
-                    ${colorScheme.timeWindowText} 
-                    ${fullscreen ? "text-lg mt-4" : "text-sm mt-3"} 
-                    text-center
-                  `}
-                >
-                  <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
+                  {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                 </div>
 
                 {/* Promotion banner at the bottom */}
@@ -570,16 +542,11 @@ export default function PriceBoard({
                 <div className={`${fullscreen ? "text-2xl" : "text-xl"} ${colorScheme.waitTimeText} mt-6`}>
                   CURRENT PRICE:{" "}
                   <span className={colorScheme.waitTimeAccent}>
-                    $
-                    {currentBowlingSlot
-                      ? currentBowlingSlot.price
-                      : currentPrices?.bowling.timeSlots[0]
-                        ? currentPrices.bowling.timeSlots[0].price
-                        : 0}
+                    ${currentBowlingSlot ? currentBowlingSlot.price : currentPrices?.bowling.timeSlots[0]?.price || 0}
                   </span>
                 </div>
                 <div className={`${fullscreen ? "text-xl" : "text-lg"} ${colorScheme.waitTimeText} mt-2 opacity-80`}>
-                  {bowlingPriceText}
+                  {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                 </div>
               </div>
             ) : (
@@ -617,7 +584,11 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            CURRENT RATE
+            {currentDartsSlot ? (
+              <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
+            ) : (
+              "TODAY"
+            )}
           </div>
           <div
             className={`
@@ -635,10 +606,15 @@ export default function PriceBoard({
             {currentDartsSlot ? (
               <>
                 <div
-                  className={`${colorScheme.priceText} ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} font-bold flex items-start`}
+                  className={`
+                    ${colorScheme.priceText} 
+                    ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
+                    font-bold 
+                    flex items-start
+                  `}
                 >
                   <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
-                  {currentDartsSlot.price}
+                  {currentDartsPrice}
                 </div>
                 <div
                   className={`
@@ -647,18 +623,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                 >
-                  {dartsPriceText}
-                </div>
-
-                {/* Current Pricing Window */}
-                <div
-                  className={`
-                    ${colorScheme.timeWindowText} 
-                    ${fullscreen ? "text-lg mt-4" : "text-sm mt-3"} 
-                    text-center
-                  `}
-                >
-                  <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
+                  {currentPrices?.darts.priceText || "PER LANE, PER HOUR"}
                 </div>
 
                 {hasPromotion("darts") && (
@@ -725,7 +690,11 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            CURRENT RATE
+            {currentLaserTagSlot ? (
+              <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
+            ) : (
+              "TODAY"
+            )}
           </div>
           <div
             className={`
@@ -743,10 +712,15 @@ export default function PriceBoard({
             {currentLaserTagSlot ? (
               <>
                 <div
-                  className={`${colorScheme.priceText} ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} font-bold flex items-start`}
+                  className={`
+                    ${colorScheme.priceText} 
+                    ${fullscreen ? "text-[180px] leading-none" : "text-8xl"} 
+                    font-bold 
+                    flex items-start
+                  `}
                 >
                   <span className={fullscreen ? "text-[90px] mt-8" : "text-5xl mt-2"}>$</span>
-                  {currentLaserTagSlot.price}
+                  {currentLaserTagPrice}
                 </div>
                 <div
                   className={`
@@ -755,7 +729,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                 >
-                  {laserTagPriceText}
+                  {currentPrices?.laserTag.priceText || "PER PERSON, PER SESSION"}
                 </div>
                 <div
                   className={`
@@ -765,17 +739,6 @@ export default function PriceBoard({
                   `}
                 >
                   44" HEIGHT REQUIREMENT
-                </div>
-
-                {/* Current Pricing Window */}
-                <div
-                  className={`
-                    ${colorScheme.timeWindowText} 
-                    ${fullscreen ? "text-lg mt-4" : "text-sm mt-3"} 
-                    text-center
-                  `}
-                >
-                  <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
                 </div>
 
                 {hasPromotion("laserTag") && (
@@ -833,13 +796,10 @@ export default function PriceBoard({
 
       {/* Footer */}
       <div className={fullscreen ? "mt-10 text-center" : "mt-8 text-center"}>
-        {/* Show shoe rental only when not using per-person pricing */}
-        {!hasPerPersonPricing() && (
-          <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
-            <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
-            <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
-          </div>
-        )}
+        <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
+          <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
+          <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
+        </div>
         {isEditingDisclaimer ? (
           <div className="relative w-full max-w-5xl mx-auto">
             <textarea
