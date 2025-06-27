@@ -452,11 +452,7 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            {currentBowlingSlot ? (
-              <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
+            CURRENT RATE
           </div>
           <div
             className={`
@@ -621,11 +617,7 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            {currentDartsSlot ? (
-              <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
+            CURRENT RATE
           </div>
           <div
             className={`
@@ -733,11 +725,7 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            {currentLaserTagSlot ? (
-              <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
+            CURRENT RATE
           </div>
           <div
             className={`
