@@ -264,6 +264,7 @@ export default function PriceBoard({
     waitTimeBg: isDarkMode ? "bg-[#1e293b]" : "bg-[#f8f9fa]",
     waitTimeText: isDarkMode ? "text-white" : "text-[#2d455a]",
     waitTimeAccent: isDarkMode ? "text-[#e67e22]" : "text-[#ff8210]",
+    timeWindowText: isDarkMode ? "text-[#94a3b8]" : "text-gray-600",
   }
 
   // Helper function to determine if any current timeframe uses per-person pricing
@@ -273,20 +274,6 @@ export default function PriceBoard({
     const activities = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot]
     return activities.some((slot) => slot && slot.pricingType === "perPerson")
   }
-
-  // Override bowling price with dynamic pricing
-  // const dynamicBowlingPrice = currentBowlingSlot
-  //   ? getDynamicBowlingPrice(currentDay, currentBowlingSlot)
-  //   : currentBowlingPrice
-
-  // Dynamic text content based on pricing mode
-  // const subheadingText =
-  //   pricingMode === "perPerson"
-  //     ? "HOURLY RATES LISTED PER PERSON. SHOE RENTAL INCLUDED."
-  //     : "HOURLY RATES LISTED PER LANE, GROUPS OF 1-6 PLAYERS PER LANE."
-
-  // const shoeRentalText =
-  //   pricingMode === "perPerson" ? "SHOE RENTAL INCLUDED IN ALL PRICING" : "$4.50 BOWLING SHOES FOR ALL BOWLERS"
 
   // Bowling price display
   const bowlingPriceText =
@@ -465,11 +452,7 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            {currentBowlingSlot ? (
-              <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
+            CURRENT RATE
           </div>
           <div
             className={`
@@ -500,6 +483,18 @@ export default function PriceBoard({
                   `}
                 >
                   {bowlingPriceText}
+                </div>
+
+                {/* Current Pricing Window */}
+                <div
+                  className={`
+                    ${colorScheme.timeWindowText} 
+                    ${fullscreen ? "text-lg mt-4" : "text-sm mt-3"} 
+                    text-center
+                  `}
+                >
+                  Current Pricing Window:{" "}
+                  <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
                 </div>
 
                 {/* Promotion banner at the bottom */}
@@ -623,11 +618,7 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            {currentDartsSlot ? (
-              <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
+            CURRENT RATE
           </div>
           <div
             className={`
@@ -658,6 +649,18 @@ export default function PriceBoard({
                   `}
                 >
                   {dartsPriceText}
+                </div>
+
+                {/* Current Pricing Window */}
+                <div
+                  className={`
+                    ${colorScheme.timeWindowText} 
+                    ${fullscreen ? "text-lg mt-4" : "text-sm mt-3"} 
+                    text-center
+                  `}
+                >
+                  Current Pricing Window:{" "}
+                  <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
                 </div>
 
                 {hasPromotion("darts") && (
@@ -724,11 +727,7 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            {currentLaserTagSlot ? (
-              <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
-            ) : (
-              "TODAY"
-            )}
+            CURRENT RATE
           </div>
           <div
             className={`
@@ -768,6 +767,18 @@ export default function PriceBoard({
                   `}
                 >
                   44" HEIGHT REQUIREMENT
+                </div>
+
+                {/* Current Pricing Window */}
+                <div
+                  className={`
+                    ${colorScheme.timeWindowText} 
+                    ${fullscreen ? "text-lg mt-4" : "text-sm mt-3"} 
+                    text-center
+                  `}
+                >
+                  Current Pricing Window:{" "}
+                  <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
                 </div>
 
                 {hasPromotion("laserTag") && (
