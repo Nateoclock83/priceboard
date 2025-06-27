@@ -452,7 +452,11 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            CURRENT RATE
+            {currentBowlingSlot ? (
+              <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
+            ) : (
+              "TODAY"
+            )}
           </div>
           <div
             className={`
@@ -493,7 +497,6 @@ export default function PriceBoard({
                     text-center
                   `}
                 >
-                  Current Pricing Window:{" "}
                   <TimeRangeDisplay startTime={currentBowlingSlot.startTime} endTime={currentBowlingSlot.endTime} />
                 </div>
 
@@ -618,7 +621,11 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            CURRENT RATE
+            {currentDartsSlot ? (
+              <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
+            ) : (
+              "TODAY"
+            )}
           </div>
           <div
             className={`
@@ -659,7 +666,6 @@ export default function PriceBoard({
                     text-center
                   `}
                 >
-                  Current Pricing Window:{" "}
                   <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
                 </div>
 
@@ -727,7 +733,11 @@ export default function PriceBoard({
               flex items-center justify-center
             `}
           >
-            CURRENT RATE
+            {currentLaserTagSlot ? (
+              <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
+            ) : (
+              "TODAY"
+            )}
           </div>
           <div
             className={`
@@ -777,7 +787,6 @@ export default function PriceBoard({
                     text-center
                   `}
                 >
-                  Current Pricing Window:{" "}
                   <TimeRangeDisplay startTime={currentLaserTagSlot.startTime} endTime={currentLaserTagSlot.endTime} />
                 </div>
 
