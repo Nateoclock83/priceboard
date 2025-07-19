@@ -2,7 +2,6 @@ export interface TimeSlot {
   startTime: string
   endTime: string
   price: number
-  pricingType?: "perLane" | "perPerson" // Add pricing type to time slots
 }
 
 export interface ActivityPrice {

@@ -27,19 +27,6 @@ function getHoursAndMinutes(totalMinutes: number): { hours: number; minutes: num
   return { hours, minutes }
 }
 
-// Helper function to get dynamic price text based on pricing type
-function getDynamicPriceText(slot: TimeSlot | null, fallbackText: string, activityType: string): string {
-  if (!slot) return fallbackText
-
-  const pricingType = slot.pricingType || "perLane"
-
-  if (activityType === "laserTag") {
-    return pricingType === "perPerson" ? "PER PERSON, PER SESSION" : "PER LANE, PER SESSION"
-  }
-
-  return pricingType === "perPerson" ? "PER PERSON, PER HOUR" : "PER LANE, PER HOUR"
-}
-
 interface PriceBoardProps {
   prices: DayPrices[]
   promotions: Promotion[]
@@ -341,9 +328,7 @@ export default function PriceBoard({
                       <TimeRangeDisplay startTime={currentDartsSlot.startTime} endTime={currentDartsSlot.endTime} />
                     </div>
                     <div className={`${fullscreen ? "text-5xl" : "text-4xl"} font-bold mb-2`}>${currentDartsPrice}</div>
-                    <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-gray-300`}>
-                      {getDynamicPriceText(currentDartsSlot, "PER LANE, PER HOUR", "darts")}
-                    </div>
+                    <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-gray-300`}>PER LANE, PER HOUR</div>
                   </>
                 ) : (
                   <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-[#a78bfa]`}>UNAVAILABLE</div>
@@ -365,7 +350,7 @@ export default function PriceBoard({
                       ${currentLaserTagPrice}
                     </div>
                     <div className={`${fullscreen ? "text-2xl" : "text-xl"} text-gray-300`}>
-                      {getDynamicPriceText(currentLaserTagSlot, "PER PERSON, PER SESSION", "laserTag")}
+                      PER PERSON, PER SESSION
                     </div>
                     <div className={`text-[#a78bfa] ${fullscreen ? "text-lg" : "text-base"} mt-2`}>
                       44" HEIGHT REQUIREMENT
@@ -415,60 +400,16 @@ export default function PriceBoard({
             {currentTime}
           </div>
         </div>
-        {(() => {
-          // Check pricing types for each activity individually
-          const bowlingIsPerPerson = currentBowlingSlot && currentBowlingSlot.pricingType === "perPerson"
-          const dartsIsPerPerson = currentDartsSlot && currentDartsSlot.pricingType === "perPerson"
-          const laserTagIsPerPerson = currentLaserTagSlot && currentLaserTagSlot.pricingType === "perPerson"
-
-          // Count how many activities use per-person pricing
-          const perPersonCount = [bowlingIsPerPerson, dartsIsPerPerson, laserTagIsPerPerson].filter(Boolean).length
-          const totalActiveActivities = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot].filter(
-            Boolean,
-          ).length
-
-          // Show per-person subtitle only if ALL active activities use per-person pricing
-          if (perPersonCount > 0 && perPersonCount === totalActiveActivities) {
-            return (
-              <div
-                className={`
-                  ${fullscreen ? "mt-6 text-3xl" : "mt-4 text-2xl"} 
-                  font-medium 
-                  ${colorScheme.text}
-                `}
-              >
-                HOURLY RATES LISTED <span className="underline font-semibold">PER PERSON</span>, GROUPS OF 1-6 PER LANE.
-              </div>
-            )
-          } else if (perPersonCount > 0) {
-            // Mixed pricing - show both
-            return (
-              <div
-                className={`
-                  ${fullscreen ? "mt-6 text-3xl" : "mt-4 text-2xl"} 
-                  font-medium 
-                  ${colorScheme.text}
-                `}
-              >
-                RATES LISTED <span className="underline font-semibold">PER LANE</span> OR{" "}
-                <span className="underline font-semibold">PER PERSON</span>, GROUPS OF 1-6 PER LANE.
-              </div>
-            )
-          } else {
-            // All per-lane pricing
-            return (
-              <div
-                className={`
-                  ${fullscreen ? "mt-6 text-3xl" : "mt-4 text-2xl"} 
-                  font-medium 
-                  ${colorScheme.text}
-                `}
-              >
-                HOURLY RATES LISTED <span className="underline font-semibold">PER LANE</span>, GROUPS OF 1-6 PER LANE.
-              </div>
-            )
-          }
-        })()}
+        <div
+          className={`
+            ${fullscreen ? "mt-6 text-3xl" : "mt-4 text-2xl"} 
+            font-medium 
+            ${colorScheme.text}
+          `}
+        >
+          HOURLY RATES LISTED <span className="underline font-semibold">PER LANE</span>, GROUPS OF{" "}
+          <span className="underline font-semibold">1-6 PLAYERS PER LANE</span>.
+        </div>
       </div>
 
       {/* Price cards */}
@@ -524,11 +465,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                 >
-                  {getDynamicPriceText(
-                    currentBowlingSlot,
-                    currentPrices?.bowling.priceText || "PER LANE, PER HOUR",
-                    "bowling",
-                  )}
+                  {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                 </div>
 
                 {/* Promotion banner at the bottom */}
@@ -609,11 +546,7 @@ export default function PriceBoard({
                   </span>
                 </div>
                 <div className={`${fullscreen ? "text-xl" : "text-lg"} ${colorScheme.waitTimeText} mt-2 opacity-80`}>
-                  {getDynamicPriceText(
-                    currentBowlingSlot || currentPrices?.bowling.timeSlots[0] || null,
-                    currentPrices?.bowling.priceText || "PER LANE, PER HOUR",
-                    "bowling",
-                  )}
+                  {currentPrices?.bowling.priceText || "PER LANE, PER HOUR"}
                 </div>
               </div>
             ) : (
@@ -690,11 +623,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                 >
-                  {getDynamicPriceText(
-                    currentDartsSlot,
-                    currentPrices?.darts.priceText || "PER LANE, PER HOUR",
-                    "darts",
-                  )}
+                  {currentPrices?.darts.priceText || "PER LANE, PER HOUR"}
                 </div>
 
                 {hasPromotion("darts") && (
@@ -800,11 +729,7 @@ export default function PriceBoard({
                     font-medium text-center
                   `}
                 >
-                  {getDynamicPriceText(
-                    currentLaserTagSlot,
-                    currentPrices?.laserTag.priceText || "PER PERSON, PER SESSION",
-                    "laserTag",
-                  )}
+                  {currentPrices?.laserTag.priceText || "PER PERSON, PER SESSION"}
                 </div>
                 <div
                   className={`
@@ -871,26 +796,10 @@ export default function PriceBoard({
 
       {/* Footer */}
       <div className={fullscreen ? "mt-10 text-center" : "mt-8 text-center"}>
-        {(() => {
-          // Only check bowling slot for shoe pricing - shoes are only for bowling
-          const bowlingUsesPerPersonPricing = currentBowlingSlot && currentBowlingSlot.pricingType === "perPerson"
-
-          if (bowlingUsesPerPersonPricing) {
-            return (
-              <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
-                <span className={colorScheme.accentText}>BOWLING SHOES INCLUDED</span>
-              </div>
-            )
-          } else {
-            return (
-              <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
-                <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
-                <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
-              </div>
-            )
-          }
-        })()}
-
+        <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
+          <span className={colorScheme.accentText}>$4.50</span> BOWLING SHOES{" "}
+          <span className={colorScheme.accentText}>FOR ALL BOWLERS</span>
+        </div>
         {isEditingDisclaimer ? (
           <div className="relative w-full max-w-5xl mx-auto">
             <textarea

@@ -155,7 +155,6 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
               startTime: newEndTime,
               endTime: "CLOSE",
               price: lastSlot.price,
-              pricingType: lastSlot.pricingType || "perLane", // Default to perLane
             })
 
             return {
@@ -179,7 +178,6 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                     startTime: defaultStartTime,
                     endTime: "CLOSE",
                     price: lastSlot ? lastSlot.price : 0,
-                    pricingType: lastSlot?.pricingType || "perLane", // Default to perLane
                   },
                 ],
               },
@@ -538,7 +536,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
             variant="outline"
             onClick={handleExport}
             disabled={exportLoading}
-            className="border-[#ff8210] text-[#ff8210] hover:bg-[#fff8f0] bg-transparent"
+            className="border-[#ff8210] text-[#ff8210] hover:bg-[#fff8f0]"
           >
             {exportLoading ? "Exporting..." : "Export HTML"}
           </Button>
@@ -771,41 +769,19 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                                 </div>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-4 mb-4">
-                                <div className="space-y-2">
-                                  <Label htmlFor={`bowling-pricing-type-${index}`}>Pricing Type</Label>
-                                  <Select
-                                    value={slot.pricingType || "perLane"}
-                                    onValueChange={(value) =>
-                                      handleTimeSlotChange(dayPrice.day, "bowling", index, "pricingType", value)
+                              <div className="space-y-2">
+                                <Label htmlFor={`bowling-price-${index}`}>Price per hour</Label>
+                                <div className="flex items-center">
+                                  <span className="mr-2 text-[#ff8210] font-bold">$</span>
+                                  <Input
+                                    id={`bowling-price-${index}`}
+                                    type="number"
+                                    value={slot.price}
+                                    onChange={(e) =>
+                                      handleTimeSlotChange(dayPrice.day, "bowling", index, "price", e.target.value)
                                     }
-                                  >
-                                    <SelectTrigger className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]">
-                                      <SelectValue placeholder="Select pricing type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="perLane">Per Lane</SelectItem>
-                                      <SelectItem value="perPerson">Per Person</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-
-                                <div className="space-y-2">
-                                  <Label htmlFor={`bowling-price-${index}`}>
-                                    Price {slot.pricingType === "perPerson" ? "per person" : "per lane"}
-                                  </Label>
-                                  <div className="flex items-center">
-                                    <span className="mr-2 text-[#ff8210] font-bold">$</span>
-                                    <Input
-                                      id={`bowling-price-${index}`}
-                                      type="number"
-                                      value={slot.price}
-                                      onChange={(e) =>
-                                        handleTimeSlotChange(dayPrice.day, "bowling", index, "price", e.target.value)
-                                      }
-                                      className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                                    />
-                                  </div>
+                                    className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                                  />
                                 </div>
                               </div>
 
@@ -817,7 +793,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
 
                           <Button
                             variant="outline"
-                            className="w-full mt-2 border-dashed border-[#2d455a]/30 text-[#2d455a]/70 bg-transparent"
+                            className="w-full mt-2 border-dashed border-[#2d455a]/30 text-[#2d455a]/70"
                             onClick={() => handleAddTimeSlot(dayPrice.day, "bowling")}
                             disabled={!dayPrice.bowling.isAvailable}
                           >
@@ -970,41 +946,19 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                                 </div>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-4 mb-4">
-                                <div className="space-y-2">
-                                  <Label htmlFor={`darts-pricing-type-${index}`}>Pricing Type</Label>
-                                  <Select
-                                    value={slot.pricingType || "perLane"}
-                                    onValueChange={(value) =>
-                                      handleTimeSlotChange(dayPrice.day, "darts", index, "pricingType", value)
+                              <div className="space-y-2">
+                                <Label htmlFor={`darts-price-${index}`}>Price per hour</Label>
+                                <div className="flex items-center">
+                                  <span className="mr-2 text-[#ff8210] font-bold">$</span>
+                                  <Input
+                                    id={`darts-price-${index}`}
+                                    type="number"
+                                    value={slot.price}
+                                    onChange={(e) =>
+                                      handleTimeSlotChange(dayPrice.day, "darts", index, "price", e.target.value)
                                     }
-                                  >
-                                    <SelectTrigger className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]">
-                                      <SelectValue placeholder="Select pricing type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="perLane">Per Lane</SelectItem>
-                                      <SelectItem value="perPerson">Per Person</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-
-                                <div className="space-y-2">
-                                  <Label htmlFor={`darts-price-${index}`}>
-                                    Price {slot.pricingType === "perPerson" ? "per person" : "per lane"}
-                                  </Label>
-                                  <div className="flex items-center">
-                                    <span className="mr-2 text-[#ff8210] font-bold">$</span>
-                                    <Input
-                                      id={`darts-price-${index}`}
-                                      type="number"
-                                      value={slot.price}
-                                      onChange={(e) =>
-                                        handleTimeSlotChange(dayPrice.day, "darts", index, "price", e.target.value)
-                                      }
-                                      className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                                    />
-                                  </div>
+                                    className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                                  />
                                 </div>
                               </div>
 
@@ -1016,7 +970,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
 
                           <Button
                             variant="outline"
-                            className="w-full mt-2 border-dashed border-[#2d455a]/30 text-[#2d455a]/70 bg-transparent"
+                            className="w-full mt-2 border-dashed border-[#2d455a]/30 text-[#2d455a]/70"
                             onClick={() => handleAddTimeSlot(dayPrice.day, "darts")}
                             disabled={!dayPrice.darts.isAvailable}
                           >
@@ -1169,41 +1123,19 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                                 </div>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-4 mb-4">
-                                <div className="space-y-2">
-                                  <Label htmlFor={`laserTag-pricing-type-${index}`}>Pricing Type</Label>
-                                  <Select
-                                    value={slot.pricingType || "perPerson"}
-                                    onValueChange={(value) =>
-                                      handleTimeSlotChange(dayPrice.day, "laserTag", index, "pricingType", value)
+                              <div className="space-y-2">
+                                <Label htmlFor={`laserTag-price-${index}`}>Price per session</Label>
+                                <div className="flex items-center">
+                                  <span className="mr-2 text-[#ff8210] font-bold">$</span>
+                                  <Input
+                                    id={`laserTag-price-${index}`}
+                                    type="number"
+                                    value={slot.price}
+                                    onChange={(e) =>
+                                      handleTimeSlotChange(dayPrice.day, "laserTag", index, "price", e.target.value)
                                     }
-                                  >
-                                    <SelectTrigger className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]">
-                                      <SelectValue placeholder="Select pricing type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="perLane">Per Lane</SelectItem>
-                                      <SelectItem value="perPerson">Per Person</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-
-                                <div className="space-y-2">
-                                  <Label htmlFor={`laserTag-price-${index}`}>
-                                    Price {slot.pricingType === "perPerson" ? "per person" : "per lane"}
-                                  </Label>
-                                  <div className="flex items-center">
-                                    <span className="mr-2 text-[#ff8210] font-bold">$</span>
-                                    <Input
-                                      id={`laserTag-price-${index}`}
-                                      type="number"
-                                      value={slot.price}
-                                      onChange={(e) =>
-                                        handleTimeSlotChange(dayPrice.day, "laserTag", index, "price", e.target.value)
-                                      }
-                                      className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
-                                    />
-                                  </div>
+                                    className="border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
+                                  />
                                 </div>
                               </div>
 
@@ -1215,7 +1147,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
 
                           <Button
                             variant="outline"
-                            className="w-full mt-2 border-dashed border-[#2d455a]/30 text-[#2d455a]/70 bg-transparent"
+                            className="w-full mt-2 border-dashed border-[#2d455a]/30 text-[#2d455a]/70"
                             onClick={() => handleAddTimeSlot(dayPrice.day, "laserTag")}
                             disabled={!dayPrice.laserTag.isAvailable}
                           >
@@ -1263,7 +1195,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                           <Button
                             variant="outline"
                             size="sm"
-                            className="flex items-center gap-1 bg-transparent"
+                            className="flex items-center gap-1"
                             onClick={togglePreviewMode}
                           >
                             {previewMode === "light" ? (
@@ -1348,7 +1280,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210] bg-transparent"
+                          className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {newPromotion.startDate ? format(new Date(newPromotion.startDate), "PPP") : "Select date"}
@@ -1371,7 +1303,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210] bg-transparent"
+                          className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {newPromotion.endDate ? format(new Date(newPromotion.endDate), "PPP") : "Select date"}
@@ -1527,12 +1459,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                   <CardDescription>See how your price board looks with active promotions</CardDescription>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-1 bg-transparent"
-                    onClick={togglePreviewMode}
-                  >
+                  <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={togglePreviewMode}>
                     {previewMode === "light" ? (
                       <>
                         <Moon className="h-4 w-4" />
@@ -1604,7 +1531,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210] bg-transparent"
+                        className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {editingPromotion.startDate
@@ -1631,7 +1558,7 @@ export default function AdminPanel({ initialPrices, initialPromotions }: AdminPa
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210] bg-transparent"
+                        className="w-full justify-start text-left font-normal border-[#2d455a]/20 focus-visible:ring-[#ff8210]"
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {editingPromotion.endDate ? format(new Date(editingPromotion.endDate), "PPP") : "Select date"}
