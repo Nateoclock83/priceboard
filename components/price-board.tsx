@@ -416,12 +416,19 @@ export default function PriceBoard({
           </div>
         </div>
         {(() => {
-          // Check if any current time slot uses per-person pricing
-          const hasPerPersonPricing = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot].some(
-            (slot) => slot && slot.pricingType === "perPerson",
-          )
+          // Check pricing types for each activity individually
+          const bowlingIsPerPerson = currentBowlingSlot && currentBowlingSlot.pricingType === "perPerson"
+          const dartsIsPerPerson = currentDartsSlot && currentDartsSlot.pricingType === "perPerson"
+          const laserTagIsPerPerson = currentLaserTagSlot && currentLaserTagSlot.pricingType === "perPerson"
 
-          if (hasPerPersonPricing) {
+          // Count how many activities use per-person pricing
+          const perPersonCount = [bowlingIsPerPerson, dartsIsPerPerson, laserTagIsPerPerson].filter(Boolean).length
+          const totalActiveActivities = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot].filter(
+            Boolean,
+          ).length
+
+          // Show per-person subtitle only if ALL active activities use per-person pricing
+          if (perPersonCount > 0 && perPersonCount === totalActiveActivities) {
             return (
               <div
                 className={`
@@ -430,11 +437,25 @@ export default function PriceBoard({
                   ${colorScheme.text}
                 `}
               >
-                HOURLY RATES LISTED <span className="underline font-semibold">PER PERSON</span>, GROUPS OF{" "}
-              1-6 PER LANE.
+                HOURLY RATES LISTED <span className="underline font-semibold">PER PERSON</span>, GROUPS OF 1-6 PER LANE.
+              </div>
+            )
+          } else if (perPersonCount > 0) {
+            // Mixed pricing - show both
+            return (
+              <div
+                className={`
+                  ${fullscreen ? "mt-6 text-3xl" : "mt-4 text-2xl"} 
+                  font-medium 
+                  ${colorScheme.text}
+                `}
+              >
+                RATES LISTED <span className="underline font-semibold">PER LANE</span> OR{" "}
+                <span className="underline font-semibold">PER PERSON</span>, GROUPS OF 1-6 PER LANE.
               </div>
             )
           } else {
+            // All per-lane pricing
             return (
               <div
                 className={`
@@ -443,8 +464,7 @@ export default function PriceBoard({
                   ${colorScheme.text}
                 `}
               >
-                HOURLY RATES LISTED <span className="underline font-semibold">PER LANE</span>, GROUPS OF{" "}
-                1-6 PER LANE.
+                HOURLY RATES LISTED <span className="underline font-semibold">PER LANE</span>, GROUPS OF 1-6 PER LANE.
               </div>
             )
           }
@@ -852,12 +872,10 @@ export default function PriceBoard({
       {/* Footer */}
       <div className={fullscreen ? "mt-10 text-center" : "mt-8 text-center"}>
         {(() => {
-          // Check if any current time slot uses per-person pricing
-          const hasPerPersonPricing = [currentBowlingSlot, currentDartsSlot, currentLaserTagSlot].some(
-            (slot) => slot && slot.pricingType === "perPerson",
-          )
+          // Only check bowling slot for shoe pricing - shoes are only for bowling
+          const bowlingUsesPerPersonPricing = currentBowlingSlot && currentBowlingSlot.pricingType === "perPerson"
 
-          if (hasPerPersonPricing) {
+          if (bowlingUsesPerPersonPricing) {
             return (
               <div className={`${fullscreen ? "text-4xl" : "text-3xl"} font-bold ${colorScheme.text} mb-4`}>
                 <span className={colorScheme.accentText}>BOWLING SHOES INCLUDED</span>
